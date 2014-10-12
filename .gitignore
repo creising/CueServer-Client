@@ -1,0 +1,14 @@
+#IDE
+.idea
+*.iml
+
+#Sonar
+.out
+
+#build
+**/build
+*.class
+*.war
+*.ear
+
+.gradle
