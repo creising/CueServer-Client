@@ -1,1 +1,3 @@
 Java client library for CueServer
+
+More details to follow... 
