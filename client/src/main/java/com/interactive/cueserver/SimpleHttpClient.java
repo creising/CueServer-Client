@@ -124,7 +124,8 @@ public class SimpleHttpClient
      *
      * @param stream the stream to close.
      */
-    private void closeStream(InputStream stream)
+    @VisibleForTesting
+    protected void closeStream(InputStream stream)
     {
         if(stream != null)
         {

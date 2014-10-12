@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -237,6 +238,24 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(testUrl + ":80/get.cgi/?req=SI"));
+    }
+
+    /**
+     * If the array returned by the service is not the expected size
+     * {@code null} will be returned.
+     */
+    @Test
+    public void systemArrayTooSmall()
+    {
+
+        Integer[] array = new Integer[77];
+
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(array);
+
+        SystemInfo info = cueServerClient.getSystemInfo();
+
+        assertThat(info, nullValue());
     }
 
     /**

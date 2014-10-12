@@ -37,7 +37,7 @@ public class SystemInfo
      */
     private SystemInfo(SystemBuilder builder)
     {
-        deviceName = checkNotNull(builder.deviceName,
+        deviceName = checkNotNull(builder.getDeviceName(),
                 "deviceName cannot be null");
         model = checkNotNull(builder.getModel(), "model cannot be null");
         serialNumber = checkNotNull(builder.getSerialNumber(),
@@ -45,7 +45,7 @@ public class SystemInfo
         firmwareVersion = checkNotNull(builder.getFirmwareVersion(),
                 "firmware cannot be null");
         time = checkNotNull(builder.getTime(), "time cannot be null");
-        hasPassword = builder.hasPassword;
+        hasPassword = builder.hasPassword();
     }
 
     /**
@@ -259,7 +259,7 @@ public class SystemInfo
          *
          * @return Can be {@code null}.
          */
-        public Boolean isHasPassword()
+        public Boolean hasPassword()
         {
             return hasPassword;
         }

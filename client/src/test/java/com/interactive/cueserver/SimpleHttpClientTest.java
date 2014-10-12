@@ -15,9 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the {@code HttpClientWrapper} class.
@@ -96,6 +94,56 @@ public class SimpleHttpClientTest
     }
 
     /**
+     * If the stream throws an exception while being closed the exception is
+     * handled by the client.
+     */
+    @Test
+    public void submitRequestStreamThrowsExceptionOnClose() throws IOException
+    {
+        String testUrl = "url";
+        ArgumentCaptor<HttpGet> getCaptor =
+                ArgumentCaptor.forClass(HttpGet.class);
+
+        when(mockedClient.execute(any(HttpGet.class))).thenReturn(
+                mockedResponse);
+        when(mockedResponse.getEntity()).thenReturn(mockedEntity);
+        when(mockedEntity.getContent()).thenReturn(mockedStream);
+        when(mockedStream.read()).thenReturn(1).thenReturn(2).thenReturn(-1);
+
+        // if we throw an exception while trying to close we should be able
+        // to recover
+        doThrow(new IOException()).when(mockedStream).close();
+        doThrow(new IOException()).when(mockedResponse).close();
+
+        Integer[] result = wrapper.submitHttpGetRequest(testUrl);
+
+        assertThat(result.length, is(2));
+        assertThat(result[0], is(1));
+        assertThat(result[1], is(2));
+
+        verify(mockedClient).execute(getCaptor.capture());
+        verify(mockedResponse).close();
+        verify(mockedStream).close();
+    }
+
+    /**
+     * If the wrapped client returns a {@code null} entity {@code null} will
+     * be returned.
+     */
+    @Test
+    public void submitRequestNullEntity() throws IOException
+    {
+        String testUrl = "url";
+        when(mockedClient.execute(any(HttpGet.class))).thenReturn(
+                mockedResponse);
+        when(mockedResponse.getEntity()).thenReturn(null);
+
+        Integer[] result = wrapper.submitHttpGetRequest(testUrl);
+
+        assertThat(result, nullValue());
+    }
+
+    /**
      * If the client throws an exception, {@code null} will be returned.
      * @throws IOException will not occur since the objects are mocked.
      */
@@ -129,5 +177,16 @@ public class SimpleHttpClientTest
         assertThat(result, nullValue());
         verify(mockedStream).close();
         verify(mockedResponse).close();
+    }
+
+
+    /**
+     * Passing a {@code null} stream into the close method will not cause an
+     * exception.
+     */
+    @Test
+    public void nullStream()
+    {
+        wrapper.closeStream(null);
     }
 }

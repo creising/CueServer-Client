@@ -2,6 +2,7 @@ package com.interactive.cueserver.data;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -47,6 +48,7 @@ public class SystemInfoTest
         assertThat(info.getFirmwareVersion(), is(firmwareVersion));
         assertThat(info.getTime(), is(time));
         assertThat(info.hasPassword(), is(hasPassword));
+        assertThat(info.toString(), containsString(deviceName));
     }
 
     /**
