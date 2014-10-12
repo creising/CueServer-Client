@@ -1,3 +1,10 @@
 language: java
 
-script: ./gradlew build jacocoTestReport
+jdk:
+- oraclejdk7
+
+env:
+- TERM=dumb
+
+after_success:
+- ./gradlew jacocoTestReport coveralls
