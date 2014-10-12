@@ -89,7 +89,7 @@ public class HttpCueServerClient implements CueServerClient
         SystemInfo info = null;
         if(byteArray.length != SYSTEM_ARRAY_LEN)
         {
-            LOGGER.warn("The array returned from the get system is not the " +
+            LOGGER.warn("The array returned from the system is not the " +
                     "correct size. Expected {} and got {}",
                     SYSTEM_ARRAY_LEN, byteArray.length);
         }
