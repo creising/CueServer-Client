@@ -9,8 +9,7 @@ dependencies {
    compile 'com.google.guava:guava:18.0',
            'org.slf4j:slf4j-api:1.7.5',
            project(':client')
-    runtime 'org.slf4j:slf4j-log4j12:1.7.5',
-            'org.slf4j:slf4j-simple:1.7.7'
+    runtime 'org.slf4j:slf4j-simple:1.7.7'
 }
 
 compileJava {
@@ -21,4 +20,5 @@ compileTestJava {
     options.compilerArgs = ['-Xlint:all']
 }
 
+applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=info"]
 mainClassName = "com.interactive.cueserver.cli.CliRunner"
