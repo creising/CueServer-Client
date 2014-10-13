@@ -1,4 +1,4 @@
-package com.interactive.cueserver;
+package com.interactive.cueserver.http;
 
 import com.interactive.cueserver.data.Model;
 import com.interactive.cueserver.data.SystemInfo;

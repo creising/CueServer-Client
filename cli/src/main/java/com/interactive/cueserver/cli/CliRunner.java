@@ -1,7 +1,7 @@
 package com.interactive.cueserver.cli;
 
 import com.interactive.cueserver.CueServerClient;
-import com.interactive.cueserver.HttpCueServerClient;
+import com.interactive.cueserver.http.HttpCueServerClient;
 import com.interactive.cueserver.cli.actions.Action;
 import com.interactive.cueserver.cli.actions.SystemInfoAction;
 

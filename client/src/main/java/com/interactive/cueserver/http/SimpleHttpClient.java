@@ -1,4 +1,4 @@
-package com.interactive.cueserver;
+package com.interactive.cueserver.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.http.HttpEntity;
