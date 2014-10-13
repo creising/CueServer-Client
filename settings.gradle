@@ -10,5 +10,6 @@
  */
 
 include 'client'
+include 'cli'
 
 rootProject.name = 'cueserver-client'
