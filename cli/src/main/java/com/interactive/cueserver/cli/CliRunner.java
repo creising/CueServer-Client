@@ -38,7 +38,6 @@ public class CliRunner
      */
     public void run()
     {
-
         while(true)
         {
             printList();
