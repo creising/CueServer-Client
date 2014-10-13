@@ -267,12 +267,4 @@ public class HttpCueServerClient implements CueServerClient
         /** The next index. */
         private int nextIndex;
     }
-
-    public static void main(String[] args)
-    {
-        CueServerClient client =
-                new HttpCueServerClient("http://cueserver.dnsalias.com");
-        SystemInfo info = client.getSystemInfo();
-        System.out.println("got back: " + info);
-    }
 }
