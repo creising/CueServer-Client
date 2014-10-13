@@ -1,6 +1,7 @@
-package com.interactive.cueserver;
+package com.interactive.cueserver.http;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.data.Model;
 import com.interactive.cueserver.data.SystemInfo;
 import org.slf4j.Logger;
