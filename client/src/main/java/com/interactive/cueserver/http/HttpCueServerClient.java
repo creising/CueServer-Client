@@ -3,6 +3,8 @@ package com.interactive.cueserver.http;
 import com.google.common.annotations.VisibleForTesting;
 import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.data.Model;
+import com.interactive.cueserver.data.PlaybackInfo;
+import com.interactive.cueserver.data.PlaybackStatus;
 import com.interactive.cueserver.data.SystemInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,9 @@ public class HttpCueServerClient implements CueServerClient
 
     /** Expected size of the array returned when requesting system info. */
     private static final int SYSTEM_ARRAY_LEN = 78;
+
+    /** Expected size of the array returned when requesting playback status. */
+    private static final int PLAYBACK_STATUS_ARRAY_LEN = 48;
 
     /** The host and port of the CueServer the client is connected to. */
     private final String url;
@@ -126,11 +131,68 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PlaybackStatus getPlaybackStatus()
+    {
+        Integer[] byteArray = httpClient.submitHttpGetRequest(
+                url + "/get.cgi/?req=PS");
+
+        PlaybackStatus status = null;
+        if(byteArray.length != PLAYBACK_STATUS_ARRAY_LEN)
+        {
+            LOGGER.warn("The array returned from the system is not the " +
+                            "correct size. Expected {} and got {}",
+                    PLAYBACK_STATUS_ARRAY_LEN, byteArray.length);
+        }
+        else
+        {
+            PlaybackStatus.PlaybackStatusBuilder builder =
+                    new PlaybackStatus.PlaybackStatusBuilder();
+
+            PlaybackInfo pb = new PlaybackInfo(1,
+                    parseCueNumber(unsignedIntToInt(byteArray, 0)),
+                    parseCueNumber(unsignedIntToInt(byteArray, 2)));
+            builder.setPlayback1(pb);
+
+            pb = new PlaybackInfo(2,
+                    parseCueNumber(unsignedIntToInt(byteArray, 12)),
+                    parseCueNumber(unsignedIntToInt(byteArray, 14)));
+            builder.setPlayback2(pb);
+
+            pb = new PlaybackInfo(3,
+                    parseCueNumber(unsignedIntToInt(byteArray, 24)),
+                    parseCueNumber(unsignedIntToInt(byteArray, 26)));
+            builder.setPlayback3(pb);
+
+            pb = new PlaybackInfo(4,
+                    parseCueNumber(unsignedIntToInt(byteArray, 36)),
+                    parseCueNumber(unsignedIntToInt(byteArray, 38)));
+            builder.setPlayback4(pb);
+
+            status = builder.build();
+        }
+
+        return status;
+    }
+
+    /**
+     * Gets the URL of the CueServer.
+     * @return Never {@code null}.
+     */
+    public String getUrl()
+    {
+        return url;
+    }
+
+    /**
      * Converts the given integer value to an enum.
      *
      * @param modelValue the model to convert.
      * @return the model.
      */
+    @VisibleForTesting
     protected Model convertModel(int modelValue)
     {
         Model model;
@@ -157,12 +219,21 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
-     * Gets the URL of the CueServer.
-     * @return Never {@code null}.
+     * Parses the given integer value into a decimal cue number.
+     *
+     * @param rawNumber 16 bit number from the CueServer.
+     * @return {@code null} if the given number is 0 or 65535, otherwise the
+     *         number.
      */
-    public String getUrl()
+    @VisibleForTesting
+    protected Double parseCueNumber(int rawNumber)
     {
-        return url;
+        Double cueNumber = null;
+        if(rawNumber != 65535 && rawNumber != 0)
+        {
+            cueNumber = rawNumber / 10d;
+        }
+        return cueNumber;
     }
 
     /**
@@ -201,6 +272,25 @@ public class HttpCueServerClient implements CueServerClient
         parseStruct.value = builder.toString();
         parseStruct.nextIndex = index;
         return parseStruct;
+    }
+
+    /**
+     * Converts the byte value found in {@code startIndex} and
+     * {@code startIndex} plus 1 into its equivalent 16 bit unsigned integer
+     * value.
+     *
+     * @param array the array of values.
+     * @param startIndex the starting index.
+     * @return the converted value.
+     * @throws ArrayIndexOutOfBoundsException if {@code startIndex} or
+     *                                        {@code startIndex} plus one is
+     *                                        outside the bounds of
+     *                                        {@code array}.
+     */
+    @VisibleForTesting
+    protected int unsignedIntToInt(Integer[] array, int startIndex)
+    {
+        return ((array[startIndex + 1]) <<8 ) | (array[startIndex] & 0xFF);
     }
 
     /**

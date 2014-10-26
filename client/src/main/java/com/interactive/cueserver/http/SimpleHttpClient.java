@@ -89,7 +89,7 @@ public class SimpleHttpClient
      *               method returns.
      * @return the bytes read from the request as integers with value [0, 255].
      *         If there was an error while reading the stream, {@code null}
-     *         will be returned.
+     *         will be returned. All indices of the array will contain a value.
      */
     @VisibleForTesting
     protected Integer[] packBytes(InputStream stream)
