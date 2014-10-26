@@ -79,6 +79,20 @@ public class PlaybackStatus
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return "PlaybackStatus{" +
+                "playbackInfo1=" + playbackInfo1 +
+                ", playbackInfo2=" + playbackInfo2 +
+                ", playbackInfo3=" + playbackInfo3 +
+                ", playbackInfo4=" + playbackInfo4 +
+                '}';
+    }
+
+    /**
      * Builder a {@link PlaybackStatus} object.
      */
     public static class PlaybackStatusBuilder

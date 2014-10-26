@@ -1,6 +1,7 @@
 package com.interactive.cueserver.cli;
 
 import com.interactive.cueserver.CueServerClient;
+import com.interactive.cueserver.cli.actions.PlaybackStatusAction;
 import com.interactive.cueserver.http.HttpCueServerClient;
 import com.interactive.cueserver.cli.actions.Action;
 import com.interactive.cueserver.cli.actions.SystemInfoAction;
@@ -96,6 +97,7 @@ public class CliRunner
 
         List<Action> csActions = new ArrayList<Action>();
         csActions.add(new SystemInfoAction(client));
+        csActions.add(new PlaybackStatusAction(client));
 
         CliRunner runner = new CliRunner(csActions);
         runner.run();

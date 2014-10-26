@@ -20,8 +20,8 @@ public class PlaybackInfoTest
     public void testConstructorAllArguments()
     {
         int pb = 1;
-        int cc = 2;
-        int nc = 3;
+        double cc = 2;
+        double nc = 3;
 
         PlaybackInfo playbackInfo = new PlaybackInfo(pb, cc, nc);
 
@@ -60,7 +60,7 @@ public class PlaybackInfoTest
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorInvalidCcNum()
     {
-        new PlaybackInfo(1, 0, null);
+        new PlaybackInfo(1, 0d, null);
     }
 
     /**
@@ -69,6 +69,6 @@ public class PlaybackInfoTest
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorInvalidNcNum()
     {
-        new PlaybackInfo(1, 1, 0);
+        new PlaybackInfo(1, 1d, 0d);
     }
 }

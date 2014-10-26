@@ -1,10 +1,14 @@
 package com.interactive.cueserver.http;
 
 import com.interactive.cueserver.data.Model;
+import com.interactive.cueserver.data.PlaybackInfo;
+import com.interactive.cueserver.data.PlaybackStatus;
 import com.interactive.cueserver.data.SystemInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -241,6 +245,64 @@ public class HttpCueServerClientTest
     }
 
     /**
+     * Test getting the playback status.
+     */
+    @Test
+    public void getStatusSuccess()
+    {
+        Integer[] values = new Integer[48];
+        Arrays.fill(values, 0);
+        values[0] = 10;
+        values[2] = 11;
+        values[12] = 12;
+        values[14] = 13;
+        values[26] = 15;
+        values[36] = 16;
+
+        when(mockedHttpClient.submitHttpGetRequest(testUrl +
+                ":80/get.cgi/?req=PS")).thenReturn(values);
+
+        PlaybackStatus status = cueServerClient.getPlaybackStatus();
+
+        assertPlatbackInfo(status.getPlayback1(), 1, 1.0, 1.1);
+        assertPlatbackInfo(status.getPlayback2(), 2, 1.2, 1.3);
+        assertPlatbackInfo(status.getPlayback3(), 3, null, 1.5);
+        assertPlatbackInfo(status.getPlayback4(), 4, 1.6, null);
+    }
+
+    /**
+     * An invalid array length will result in {@code null} being returned.
+     */
+    @Test
+    public void getStatusInvalidArrayLength()
+    {
+        Integer[] values = new Integer[2];
+
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(values);
+
+        assertThat(cueServerClient.getPlaybackStatus(), nullValue());
+    }
+
+    /**
+     * The max cue number valid will result in {@code null}.
+     */
+    @Test
+    public void parseCueNumberMax()
+    {
+        assertThat(cueServerClient.parseCueNumber(65535), nullValue());
+    }
+
+    /**
+     * The min cue number valid will result in {@code null}.
+     */
+    @Test
+    public void parseCueNumberMin()
+    {
+        assertThat(cueServerClient.parseCueNumber(0), nullValue());
+    }
+
+    /**
      * If the array returned by the service is not the expected size
      * {@code null} will be returned.
      */
@@ -339,6 +401,24 @@ public class HttpCueServerClientTest
     public void endTooHigh()
     {
         HttpCueServerClient.checkIndex(new Integer[10], 9, 10);
+    }
+
+    /**
+     * Helper method to assert {@link PlaybackInfo}.
+     *
+     * @param info the object to asseert.
+     * @param number the expected playback number.
+     * @param cc the expected current cue.
+     * @param nc the expected next cue.
+     */
+    private void assertPlatbackInfo(PlaybackInfo info,
+                                    int number,
+                                    Double cc,
+                                    Double nc)
+    {
+        assertThat(info.getPlaybackNumber(), is(number));
+        assertThat(info.getCurrentCue(), is(cc));
+        assertThat(info.getNextCue(), is(nc));
     }
 
     /**

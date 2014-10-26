@@ -1,5 +1,6 @@
 package com.interactive.cueserver;
 
+import com.interactive.cueserver.data.PlaybackStatus;
 import com.interactive.cueserver.data.SystemInfo;
 
 /**
@@ -16,4 +17,12 @@ public interface CueServerClient
      *         CueServer.
      */
     SystemInfo getSystemInfo();
+
+    /**
+     * Gets the playback status of the CueServer.
+     *
+     * @return {@code null} if there was an error communicating to the
+     *         CueServer.
+     */
+    PlaybackStatus getPlaybackStatus();
 }

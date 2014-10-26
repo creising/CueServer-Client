@@ -11,10 +11,10 @@ public class PlaybackInfo
     private final int playbackNumber;
 
     /** The current cue. */
-    private final Integer currentCue;
+    private final Double currentCue;
 
     /** The next cue. */
-    private final Integer nextCue;
+    private final Double nextCue;
 
     /**
      * Creates a new {@code Playback}.
@@ -26,8 +26,8 @@ public class PlaybackInfo
      * @throws IllegalArgumentException if any value is not positive.
      */
     public PlaybackInfo(int playbackNumber,
-                        Integer currentCue,
-                        Integer nextCue)
+                        Double currentCue,
+                        Double nextCue)
     {
         this.playbackNumber = throwIfNotPositive(playbackNumber);
         this.currentCue = throwIfNotPositive(currentCue);
@@ -49,7 +49,7 @@ public class PlaybackInfo
      *
      * @return {@code null} if there is no current cue.
      */
-    public Integer getCurrentCue()
+    public Double getCurrentCue()
     {
         return currentCue;
     }
@@ -59,16 +59,36 @@ public class PlaybackInfo
      *
      * @return {@code null} if there is no next cue.
      */
-    public Integer getNextCue()
+    public Double getNextCue()
     {
         return nextCue;
     }
 
-    private static Integer throwIfNotPositive(Integer number)
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
     {
-        if(number != null && number <= 0)
+        return "PlaybackInfo{" +
+                "playbackNumber=" + playbackNumber +
+                ", currentCue=" + currentCue +
+                ", nextCue=" + nextCue +
+                '}';
+    }
+
+    /**
+     * Throws an positive is the given number is not positive.
+     *
+     * @param number the number to check.
+     * @return The original number.
+     * @throws IllegalArgumentException if the given number is not positive.
+     */
+    private static<T extends Number> T throwIfNotPositive(T number)
+    {
+        if(number != null && number.doubleValue() <= 0)
         {
-            throw new IllegalArgumentException("number cannot be negative");
+            throw new IllegalArgumentException("number must be positive");
         }
 
         return number;
