@@ -166,7 +166,6 @@ public class HttpCueServerClient implements CueServerClient
                     parseCueNumber(unsignedIntToInt(byteArray, 26)));
             builder.setPlayback3(pb);
 
-
             pb = new PlaybackInfo(4,
                     parseCueNumber(unsignedIntToInt(byteArray, 36)),
                     parseCueNumber(unsignedIntToInt(byteArray, 38)));
@@ -220,7 +219,7 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
-     * Parsed the given integer value into a decimal cue number.
+     * Parses the given integer value into a decimal cue number.
      *
      * @param rawNumber 16 bit number from the CueServer.
      * @return {@code null} if the given number is 0 or 65535, otherwise the
@@ -277,7 +276,8 @@ public class HttpCueServerClient implements CueServerClient
 
     /**
      * Converts the byte value found in {@code startIndex} and
-     * {@code startIndex} plus 1 into it equivalent 16 bit unsigned number.
+     * {@code startIndex} plus 1 into its equivalent 16 bit unsigned integer
+     * value.
      *
      * @param array the array of values.
      * @param startIndex the starting index.
@@ -287,7 +287,8 @@ public class HttpCueServerClient implements CueServerClient
      *                                        outside the bounds of
      *                                        {@code array}.
      */
-    private int unsignedIntToInt(Integer[] array, int startIndex)
+    @VisibleForTesting
+    protected int unsignedIntToInt(Integer[] array, int startIndex)
     {
         return ((array[startIndex + 1]) <<8 ) | (array[startIndex] & 0xFF);
     }

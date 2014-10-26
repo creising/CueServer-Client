@@ -19,7 +19,7 @@ public interface CueServerClient
     SystemInfo getSystemInfo();
 
     /**
-     * Gets the playback status of the CueServer.
+     * Gets the playback status from a CueServer.
      *
      * @return {@code null} if there was an error communicating to the
      *         CueServer.

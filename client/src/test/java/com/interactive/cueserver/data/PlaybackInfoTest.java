@@ -2,6 +2,7 @@ package com.interactive.cueserver.data;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,6 +29,8 @@ public class PlaybackInfoTest
         assertThat(playbackInfo.getPlaybackNumber(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), is(cc));
         assertThat(playbackInfo.getNextCue(), is(nc));
+
+        assertThat(playbackInfo.toString(), containsString("PlaybackInfo"));
     }
 
     /**
@@ -43,6 +46,8 @@ public class PlaybackInfoTest
         assertThat(playbackInfo.getPlaybackNumber(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), nullValue());
         assertThat(playbackInfo.getNextCue(), nullValue());
+
+        assertThat(playbackInfo.toString(), containsString("PlaybackInfo"));
     }
 
     /**

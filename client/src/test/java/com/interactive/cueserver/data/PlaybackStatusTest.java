@@ -3,6 +3,8 @@ package com.interactive.cueserver.data;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertSame;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -44,6 +46,8 @@ public class PlaybackStatusTest
         assertSame(status.getPlayback2(), pb2);
         assertSame(status.getPlayback3(), pb3);
         assertSame(status.getPlayback4(), pb4);
+
+        assertThat(status.toString(), containsString("playback"));
     }
 
     /**

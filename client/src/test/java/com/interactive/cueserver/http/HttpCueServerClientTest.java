@@ -250,6 +250,9 @@ public class HttpCueServerClientTest
     @Test
     public void getStatusSuccess()
     {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
         Integer[] values = new Integer[48];
         Arrays.fill(values, 0);
         values[0] = 10;
@@ -259,15 +262,18 @@ public class HttpCueServerClientTest
         values[26] = 15;
         values[36] = 16;
 
-        when(mockedHttpClient.submitHttpGetRequest(testUrl +
-                ":80/get.cgi/?req=PS")).thenReturn(values);
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(values);
 
         PlaybackStatus status = cueServerClient.getPlaybackStatus();
 
-        assertPlatbackInfo(status.getPlayback1(), 1, 1.0, 1.1);
-        assertPlatbackInfo(status.getPlayback2(), 2, 1.2, 1.3);
-        assertPlatbackInfo(status.getPlayback3(), 3, null, 1.5);
-        assertPlatbackInfo(status.getPlayback4(), 4, 1.6, null);
+        assertPlaybackInfo(status.getPlayback1(), 1, 1.0, 1.1);
+        assertPlaybackInfo(status.getPlayback2(), 2, 1.2, 1.3);
+        assertPlaybackInfo(status.getPlayback3(), 3, null, 1.5);
+        assertPlaybackInfo(status.getPlayback4(), 4, 1.6, null);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(testUrl + ":80/get.cgi/?req=PS"));
     }
 
     /**
@@ -404,6 +410,15 @@ public class HttpCueServerClientTest
     }
 
     /**
+     * A start index out of the bounds of the array will cause an exception.
+     */
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void parseInBadStartIndex()
+    {
+        cueServerClient.unsignedIntToInt(new Integer[0], 1);
+    }
+
+    /**
      * Helper method to assert {@link PlaybackInfo}.
      *
      * @param info the object to asseert.
@@ -411,7 +426,7 @@ public class HttpCueServerClientTest
      * @param cc the expected current cue.
      * @param nc the expected next cue.
      */
-    private void assertPlatbackInfo(PlaybackInfo info,
+    private void assertPlaybackInfo(PlaybackInfo info,
                                     int number,
                                     Double cc,
                                     Double nc)

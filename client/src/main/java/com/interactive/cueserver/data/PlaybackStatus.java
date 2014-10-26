@@ -31,11 +31,11 @@ public class PlaybackStatus
         this.playbackInfo1 = Preconditions.checkNotNull(builder.getPlayback1(),
                 "playback1 cannot be null");
         this.playbackInfo2 = Preconditions.checkNotNull(builder.getPlayback2(),
-                "playback1 cannot be null");
+                "playback2 cannot be null");
         this.playbackInfo3 = Preconditions.checkNotNull(builder.getPlayback3(),
-                "playback1 cannot be null");
+                "playback3 cannot be null");
         this.playbackInfo4 = Preconditions.checkNotNull(builder.getPlayback4(),
-                "playback1 cannot be null");
+                "playback4 cannot be null");
     }
 
     /**
@@ -93,7 +93,7 @@ public class PlaybackStatus
     }
 
     /**
-     * Builder a {@link PlaybackStatus} object.
+     * Builder for the {@link PlaybackStatus} object.
      */
     public static class PlaybackStatusBuilder
     {
@@ -120,10 +120,10 @@ public class PlaybackStatus
         }
 
         /**
-         * Set the value for playback 1.
+         * Sets the value for playback 1.
          *
          * @param playbackInfo1 the value for playback 1.
-         * @return the reference to {@code this} builder.
+         * @return a reference to {@code this} builder.
          */
         public PlaybackStatusBuilder setPlayback1(PlaybackInfo playbackInfo1)
         {
@@ -142,10 +142,10 @@ public class PlaybackStatus
         }
 
         /**
-         * Set the value for playback 2.
+         * Sets the value for playback 2.
          *
          * @param playbackInfo2 the value for playback 2.
-         * @return the reference to {@code this} builder.
+         * @return a reference to {@code this} builder.
          */
         public PlaybackStatusBuilder setPlayback2(PlaybackInfo playbackInfo2)
         {
@@ -164,10 +164,10 @@ public class PlaybackStatus
         }
 
         /**
-         * Set the value for playback 3.
+         * Sets the value for playback 3.
          *
          * @param playbackInfo3 the value for playback 3.
-         * @return the reference to {@code this} builder.
+         * @return a reference to {@code this} builder.
          */
         public PlaybackStatusBuilder setPlayback3(PlaybackInfo playbackInfo3)
         {
@@ -186,10 +186,10 @@ public class PlaybackStatus
         }
 
         /**
-         * Set the value for playback 4.
+         * Sets the value for playback 4.
          *
          * @param playbackInfo4 the value for playback 4.
-         * @return the reference to {@code this} builder.
+         * @return a reference to {@code this} builder.
          */
         public PlaybackStatusBuilder setPlayback4(PlaybackInfo playbackInfo4)
         {
@@ -208,5 +208,4 @@ public class PlaybackStatus
             return new PlaybackStatus(this);
         }
     }
-
 }

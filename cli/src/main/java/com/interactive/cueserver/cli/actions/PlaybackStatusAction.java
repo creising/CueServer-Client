@@ -11,7 +11,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PlaybackStatusAction implements Action
 {
-
     /** Client to retrieve data from. */
     private final CueServerClient client;
 

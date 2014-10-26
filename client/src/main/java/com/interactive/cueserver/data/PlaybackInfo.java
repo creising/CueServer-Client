@@ -17,12 +17,13 @@ public class PlaybackInfo
     private final Double nextCue;
 
     /**
-     * Creates a new {@code Playback}.
+     * Creates a new {@code PlaybackInfo}.
      *
      * @param playbackNumber the number of the playback.
-     * @param currentCue the current cue, or {@code null} if there is no
-     *                   current cue.
-     * @param nextCue the next cue, or {@code null} if there is no current cue.
+     * @param currentCue the current cue, or {@code null} if the playback does
+     *                   not have a current cue.
+     * @param nextCue the next cue, or {@code null} if the playback does not
+     *                 have a next cue.
      * @throws IllegalArgumentException if any value is not positive.
      */
     public PlaybackInfo(int playbackNumber,
@@ -35,7 +36,7 @@ public class PlaybackInfo
     }
 
     /**
-     * Get the playback number.
+     * Gets the playback number.
      *
      * @return Never negative.
      */
@@ -47,7 +48,7 @@ public class PlaybackInfo
     /**
      * Gets the current cue.
      *
-     * @return {@code null} if there is no current cue.
+     * @return {@code null} if the playback does not have a cue loaded.
      */
     public Double getCurrentCue()
     {
@@ -57,7 +58,7 @@ public class PlaybackInfo
     /**
      * Gets the next cue.
      *
-     * @return {@code null} if there is no next cue.
+     * @return {@code null} if the playback does not have a next cue.
      */
     public Double getNextCue()
     {
@@ -78,10 +79,10 @@ public class PlaybackInfo
     }
 
     /**
-     * Throws an positive is the given number is not positive.
+     * Throws an exception is the given number is not positive.
      *
      * @param number the number to check.
-     * @return The original number.
+     * @return the original number.
      * @throws IllegalArgumentException if the given number is not positive.
      */
     private static<T extends Number> T throwIfNotPositive(T number)
