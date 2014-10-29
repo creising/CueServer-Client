@@ -409,8 +409,6 @@ public class HttpCueServerClientTest
         assertThat(info, nullValue());
     }
 
-
-
     /**
      * Test converting a CS-800.
      */
