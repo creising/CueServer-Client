@@ -25,4 +25,14 @@ public interface CueServerClient
      *         CueServer.
      */
     PlaybackStatus getPlaybackStatus();
+
+    /**
+     * Gets the current output levels.
+     *
+     * @return the current output levels between [0, 255]. The array will always
+     *         contain a full DMX universe. This method will return
+     *         {@code null} if there was an error communicating to the
+     *         CueServer.
+     */
+    Integer[] getOutputLevels();
 }

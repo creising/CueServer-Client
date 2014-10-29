@@ -13,6 +13,7 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -168,7 +169,7 @@ public class HttpCueServerClientTest
      * Test a valid request and response.
      */
     @Test
-    public void validRequest()
+    public void validSystemInfoRequest()
     {
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
@@ -208,7 +209,7 @@ public class HttpCueServerClientTest
      * Test a valid request and response.
      */
     @Test
-    public void validRequestNoPassword()
+    public void validSystemInfoRequestNoPassword()
     {
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
@@ -242,6 +243,30 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(testUrl + ":80/get.cgi/?req=SI"));
+    }
+
+    /**
+     * A {@code null} response will result in {@code null} being returned.
+     */
+    @Test
+    public void statusWrongSizeArray()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(new Integer[1]);
+
+        assertThat(cueServerClient.getSystemInfo(), nullValue());
+    }
+
+    /**
+     * A {@code null} response will result in {@code null} being returned.
+     */
+    @Test
+    public void statusNullResponse()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(null);
+
+        assertThat(cueServerClient.getSystemInfo(), nullValue());
     }
 
     /**
@@ -282,12 +307,70 @@ public class HttpCueServerClientTest
     @Test
     public void getStatusInvalidArrayLength()
     {
-        Integer[] values = new Integer[2];
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(new Integer[2]);
+
+        assertThat(cueServerClient.getPlaybackStatus(), nullValue());
+    }
+
+    /**
+     * A {@code null} response will result in {@code null} being returned.
+     */
+    @Test
+    public void getStatusNullArray()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(null);
+
+        assertThat(cueServerClient.getPlaybackStatus(), nullValue());
+    }
+
+    /**
+     * Test a valid DMX value response.
+     */
+    @Test
+    public void getOutputValues()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        Integer[] values = new Integer[512];
 
         when(mockedHttpClient.submitHttpGetRequest(
                 anyString())).thenReturn(values);
 
-        assertThat(cueServerClient.getPlaybackStatus(), nullValue());
+        Integer[] outputLevels = cueServerClient.getOutputLevels();
+
+        assertSame(outputLevels, values);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(testUrl + ":80/get.cgi/?req=OUT"));
+    }
+
+    /**
+     * Too few values will return {@code null}.
+     */
+    @Test
+    public void getOutputValuesTooFewChannels()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(new Integer[511]);
+
+        Integer[] outputLevels = cueServerClient.getOutputLevels();
+
+        assertThat(outputLevels, nullValue());
+    }
+
+    /**
+     * A {@code null} response will result in {@code null} being returned.
+     */
+    @Test
+    public void getOutputValuesNullResponse()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(null);
+
+        assertThat(cueServerClient.getOutputLevels(), nullValue());
     }
 
     /**
@@ -325,6 +408,8 @@ public class HttpCueServerClientTest
 
         assertThat(info, nullValue());
     }
+
+
 
     /**
      * Test converting a CS-800.

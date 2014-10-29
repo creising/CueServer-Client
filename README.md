@@ -3,7 +3,13 @@
 [![Coverage Status](https://coveralls.io/repos/creising/CueServer-Client/badge.png?branch=master)](https://coveralls.io/r/creising/CueServer-Client?branch=master)
 
 ### Introduction
-Java client library for CueServer
+The CueSever Java client library is intended to facilitate interaction with
+CueServer's HTTP interface. In addition to the client, there is also a simple
+command line interface to demonstrate the use of the CueServer client.
+
+Currently, the client library does not throttle requests to the CueServer. As
+noted in CueServer's documentation, new requests should only be sent after a
+response from the previous request has been received from CueServer.
 
 ### Details
-More details to follow... 
+[Interactive Technologies](http://interactive-online.com)
