@@ -93,11 +93,10 @@ public class HttpCueServerClient implements CueServerClient
                 url + "/get.cgi/?req=SI");
 
         SystemInfo info = null;
-        if(byteArray.length != SYSTEM_ARRAY_LEN)
+        if(byteArray == null || byteArray.length != SYSTEM_ARRAY_LEN)
         {
             LOGGER.warn("The array returned from the system is not the " +
-                    "correct size. Expected {} and got {}",
-                    SYSTEM_ARRAY_LEN, byteArray.length);
+                    "correct size.", SYSTEM_ARRAY_LEN);
         }
         else
         {
@@ -140,11 +139,11 @@ public class HttpCueServerClient implements CueServerClient
                 url + "/get.cgi/?req=PS");
 
         PlaybackStatus status = null;
-        if(byteArray.length != PLAYBACK_STATUS_ARRAY_LEN)
+        if(byteArray == null ||  byteArray.length != PLAYBACK_STATUS_ARRAY_LEN)
         {
             LOGGER.warn("The array returned from the system is not the " +
-                            "correct size. Expected {} and got {}",
-                    PLAYBACK_STATUS_ARRAY_LEN, byteArray.length);
+                            "correct size. Expected {}",
+                    PLAYBACK_STATUS_ARRAY_LEN);
         }
         else
         {
@@ -175,6 +174,28 @@ public class HttpCueServerClient implements CueServerClient
         }
 
         return status;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Integer[] getOutputLevels()
+    {
+        Integer[] byteArray = httpClient.submitHttpGetRequest(
+                url + "/get.cgi/?req=OUT");
+
+        Integer[] dmxValues  = null;
+        if(byteArray == null || byteArray.length != 512)
+        {
+            LOGGER.warn("The values returned from the CueServer did not" +
+                    "was not 512 bytes or null.");
+        }
+        else
+        {
+            dmxValues = byteArray;
+        }
+        return dmxValues;
     }
 
     /**

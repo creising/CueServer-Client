@@ -13,7 +13,7 @@ public interface CueServerClient
     /**
      * Gets the current system information from a CueServer.
      *
-     * @return {@code null} if there was an error communicating to the
+     * @return {@code null} if there was an error communicating with the
      *         CueServer.
      */
     SystemInfo getSystemInfo();
@@ -21,8 +21,18 @@ public interface CueServerClient
     /**
      * Gets the playback status from a CueServer.
      *
-     * @return {@code null} if there was an error communicating to the
+     * @return {@code null} if there was an error communicating with the
      *         CueServer.
      */
     PlaybackStatus getPlaybackStatus();
+
+    /**
+     * Gets the current output levels.
+     *
+     * @return the current output levels between [0, 255]. The array will always
+     *         contain a full DMX universe. This method will return
+     *         {@code null} if there was an error communicating with the
+     *         CueServer.
+     */
+    Integer[] getOutputLevels();
 }
