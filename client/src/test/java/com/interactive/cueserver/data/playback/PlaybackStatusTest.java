@@ -1,5 +1,7 @@
-package com.interactive.cueserver.data;
+package com.interactive.cueserver.data.playback;
 
+import com.interactive.cueserver.data.playback.PlaybackInfo;
+import com.interactive.cueserver.data.playback.PlaybackStatus;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertSame;

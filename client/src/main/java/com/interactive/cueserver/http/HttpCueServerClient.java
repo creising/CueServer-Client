@@ -2,10 +2,12 @@ package com.interactive.cueserver.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.interactive.cueserver.CueServerClient;
-import com.interactive.cueserver.data.Model;
-import com.interactive.cueserver.data.PlaybackInfo;
-import com.interactive.cueserver.data.PlaybackStatus;
-import com.interactive.cueserver.data.SystemInfo;
+import com.interactive.cueserver.data.cue.Cue;
+import com.interactive.cueserver.data.playback.Playback;
+import com.interactive.cueserver.data.system.Model;
+import com.interactive.cueserver.data.playback.PlaybackInfo;
+import com.interactive.cueserver.data.playback.PlaybackStatus;
+import com.interactive.cueserver.data.system.SystemInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,22 +152,22 @@ public class HttpCueServerClient implements CueServerClient
             PlaybackStatus.PlaybackStatusBuilder builder =
                     new PlaybackStatus.PlaybackStatusBuilder();
 
-            PlaybackInfo pb = new PlaybackInfo(1,
+            PlaybackInfo pb = new PlaybackInfo(Playback.PLAYBACK_1,
                     parseCueNumber(unsignedIntToInt(byteArray, 0)),
                     parseCueNumber(unsignedIntToInt(byteArray, 2)));
             builder.setPlayback1(pb);
 
-            pb = new PlaybackInfo(2,
+            pb = new PlaybackInfo(Playback.PLAYBACK_2,
                     parseCueNumber(unsignedIntToInt(byteArray, 12)),
                     parseCueNumber(unsignedIntToInt(byteArray, 14)));
             builder.setPlayback2(pb);
 
-            pb = new PlaybackInfo(3,
+            pb = new PlaybackInfo(Playback.PLAYBACK_3,
                     parseCueNumber(unsignedIntToInt(byteArray, 24)),
                     parseCueNumber(unsignedIntToInt(byteArray, 26)));
             builder.setPlayback3(pb);
 
-            pb = new PlaybackInfo(4,
+            pb = new PlaybackInfo(Playback.PLAYBACK_4,
                     parseCueNumber(unsignedIntToInt(byteArray, 36)),
                     parseCueNumber(unsignedIntToInt(byteArray, 38)));
             builder.setPlayback4(pb);
@@ -247,12 +249,12 @@ public class HttpCueServerClient implements CueServerClient
      *         number.
      */
     @VisibleForTesting
-    protected Double parseCueNumber(int rawNumber)
+    protected Cue parseCueNumber(int rawNumber)
     {
-        Double cueNumber = null;
+        Cue cueNumber = null;
         if(rawNumber != 65535 && rawNumber != 0)
         {
-            cueNumber = rawNumber / 10d;
+            cueNumber = new Cue(rawNumber / 10d);
         }
         return cueNumber;
     }

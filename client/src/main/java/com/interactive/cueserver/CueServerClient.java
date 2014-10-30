@@ -1,7 +1,7 @@
 package com.interactive.cueserver;
 
-import com.interactive.cueserver.data.PlaybackStatus;
-import com.interactive.cueserver.data.SystemInfo;
+import com.interactive.cueserver.data.playback.PlaybackStatus;
+import com.interactive.cueserver.data.system.SystemInfo;
 
 /**
  * Allows client to both retrieve and send commands to a CueServer.

@@ -1,9 +1,11 @@
 package com.interactive.cueserver.http;
 
-import com.interactive.cueserver.data.Model;
-import com.interactive.cueserver.data.PlaybackInfo;
-import com.interactive.cueserver.data.PlaybackStatus;
-import com.interactive.cueserver.data.SystemInfo;
+import com.interactive.cueserver.data.cue.Cue;
+import com.interactive.cueserver.data.playback.Playback;
+import com.interactive.cueserver.data.system.Model;
+import com.interactive.cueserver.data.playback.PlaybackInfo;
+import com.interactive.cueserver.data.playback.PlaybackStatus;
+import com.interactive.cueserver.data.system.SystemInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -292,10 +294,14 @@ public class HttpCueServerClientTest
 
         PlaybackStatus status = cueServerClient.getPlaybackStatus();
 
-        assertPlaybackInfo(status.getPlayback1(), 1, 1.0, 1.1);
-        assertPlaybackInfo(status.getPlayback2(), 2, 1.2, 1.3);
-        assertPlaybackInfo(status.getPlayback3(), 3, null, 1.5);
-        assertPlaybackInfo(status.getPlayback4(), 4, 1.6, null);
+        assertPlaybackInfo(status.getPlayback1(),
+                Playback.PLAYBACK_1, 1.0, 1.1);
+        assertPlaybackInfo(status.getPlayback2(),
+                Playback.PLAYBACK_2, 1.2, 1.3);
+        assertPlaybackInfo(status.getPlayback3(),
+                Playback.PLAYBACK_3, null, 1.5);
+        assertPlaybackInfo(status.getPlayback4(),
+                Playback.PLAYBACK_4, 1.6, null);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(testUrl + ":80/get.cgi/?req=PS"));
@@ -510,13 +516,35 @@ public class HttpCueServerClientTest
      * @param nc the expected next cue.
      */
     private void assertPlaybackInfo(PlaybackInfo info,
-                                    int number,
+                                    Playback number,
                                     Double cc,
                                     Double nc)
     {
-        assertThat(info.getPlaybackNumber(), is(number));
-        assertThat(info.getCurrentCue(), is(cc));
-        assertThat(info.getNextCue(), is(nc));
+        Cue playbackCc = info.getCurrentCue();
+        Cue playbackNc = info.getNextCue();
+        assertThat(info.getPlayback(), is(number));
+
+        if(cc != null)
+        {
+            assertThat(playbackCc.getNumber(), is(cc));
+            assertThat(playbackCc.getName(), nullValue());
+        }
+        else
+        {
+            assertThat(playbackCc, nullValue());
+
+        }
+
+        if(nc != null)
+        {
+            assertThat(playbackNc.getNumber(), is(nc));
+            assertThat(playbackNc.getName(), nullValue());
+        }
+        else
+        {
+            assertThat(playbackNc, nullValue());
+
+        }
     }
 
     /**

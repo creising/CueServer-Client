@@ -1,4 +1,4 @@
-package com.interactive.cueserver.data;
+package com.interactive.cueserver.data.playback;
 
 import com.google.common.base.Preconditions;
 

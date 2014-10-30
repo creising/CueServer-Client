@@ -1,5 +1,6 @@
-package com.interactive.cueserver.data;
+package com.interactive.cueserver.data.playback;
 
+import com.interactive.cueserver.data.cue.Cue;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -14,19 +15,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class PlaybackInfoTest
 {
+    /** Current cue used in tests. */
+    private final Cue cc = new Cue(1);
+
+    /** Next cue used in tests. */
+    private final Cue nc = new Cue(2);
+
+    /** Playback used in tests. */
+    private final Playback pb = Playback.PLAYBACK_1;
+
     /**
      * Test with valid arguments.
      */
     @Test
     public void testConstructorAllArguments()
     {
-        int pb = 1;
-        double cc = 2;
-        double nc = 3;
-
         PlaybackInfo playbackInfo = new PlaybackInfo(pb, cc, nc);
 
-        assertThat(playbackInfo.getPlaybackNumber(), is(pb));
+        assertThat(playbackInfo.getPlayback(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), is(cc));
         assertThat(playbackInfo.getNextCue(), is(nc));
 
@@ -39,41 +45,13 @@ public class PlaybackInfoTest
     @Test
     public void testConstructorOptionalArguments()
     {
-        int pb = 1;
 
         PlaybackInfo playbackInfo = new PlaybackInfo(pb, null, null);
 
-        assertThat(playbackInfo.getPlaybackNumber(), is(pb));
+        assertThat(playbackInfo.getPlayback(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), nullValue());
         assertThat(playbackInfo.getNextCue(), nullValue());
 
         assertThat(playbackInfo.toString(), containsString("PlaybackInfo"));
-    }
-
-    /**
-     * Invalid playback number will cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorInvalidPbNum()
-    {
-        new PlaybackInfo(0, null, null);
-    }
-
-    /**
-     * Invalid current cue number will cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorInvalidCcNum()
-    {
-        new PlaybackInfo(1, 0d, null);
-    }
-
-    /**
-     * Invalid next cue number will cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorInvalidNcNum()
-    {
-        new PlaybackInfo(1, 1d, 0d);
     }
 }
