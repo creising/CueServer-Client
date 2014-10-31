@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Example for retrieving the DMX output values.
- *
+ * <p>
  * author: Chris Reising
  */
 public class DmxOutputAction implements Action

@@ -7,7 +7,7 @@ import static org.hamcrest.core.Is.is;
 
 /**
  * Tests {@link Playback}.
- *
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackTest

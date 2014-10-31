@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Communicates with a  CueServer over HTTP to request real-time information
  * about the show it is playing back, as well as send live data to CueServer
  * that it should output to the connected devices.
- *
+ * <p>
  * author: Chris Reising
  */
 public class HttpCueServerClient implements CueServerClient
@@ -110,7 +110,7 @@ public class HttpCueServerClient implements CueServerClient
         }
         else
         {
-            SystemInfo.SystemBuilder builder = new SystemInfo.SystemBuilder();
+            SystemInfo.Builder builder = new SystemInfo.Builder();
 
             ParseStruct<String> parsedValue = bytesToString(
                     byteArray, 0, 16);
@@ -157,8 +157,8 @@ public class HttpCueServerClient implements CueServerClient
         }
         else
         {
-            PlaybackStatus.PlaybackStatusBuilder builder =
-                    new PlaybackStatus.PlaybackStatusBuilder();
+            PlaybackStatus.Builder builder =
+                    new PlaybackStatus.Builder();
 
             PlaybackInfo pb = new PlaybackInfo.Builder()
                     .setPlayback(Playback.PLAYBACK_1)
@@ -385,7 +385,8 @@ public class HttpCueServerClient implements CueServerClient
      * @param size the number of indices that should be parsed.
      * @return a struct containing the result as well as the next index to
      *         start parsing from.
-     * @throws ArrayIndexOutOfBoundsException {@see checkIndex}.
+     * @throws ArrayIndexOutOfBoundsException if the indices being checked are
+     *                                        not valid..
      */
     @VisibleForTesting
     protected static ParseStruct<String> bytesToString(Integer[] byteArray,
@@ -416,9 +417,9 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
-     * Converts the byte value found in {@code startIndex} and
-     * {@code startIndex} plus 1 into its equivalent 16 bit unsigned integer
-     * value.
+     * Converts the byte value represented as an integer found in
+     * {@code startIndex} and {@code startIndex} plus 1 into its equivalent 16
+     * bit integer value.
      *
      * @param array the array of values.
      * @param startIndex the starting index.

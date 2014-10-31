@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Get the system info from a CueServer.
- *
+ * <p>
  * author: Chris Reising
  */
 public class SystemInfoAction implements Action

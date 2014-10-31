@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.*;
 
 /**
  * Contains details of a CueServer.
- *
+ * <p>
  * author: Chris Reising
  */
 public class SystemInfo
@@ -35,7 +35,7 @@ public class SystemInfo
      * @throws NullPointerException if any parameter in the builder is
      * {@code null}.
      */
-    private SystemInfo(SystemBuilder builder)
+    private SystemInfo(Builder builder)
     {
         deviceName = checkNotNull(builder.getDeviceName(),
                 "deviceName cannot be null");
@@ -124,7 +124,7 @@ public class SystemInfo
     /**
      * Builds a new {@link SystemInfo}.
      */
-    public static class SystemBuilder
+    public static class Builder
     {
         /** The value used for the device name. */
         private String deviceName;
@@ -160,7 +160,7 @@ public class SystemInfo
          * @param deviceName the name to set.
          * @return {@code this} builder.
          */
-        public SystemBuilder setDeviceName(String deviceName)
+        public Builder setDeviceName(String deviceName)
         {
             this.deviceName = deviceName;
             return this;
@@ -182,7 +182,7 @@ public class SystemInfo
          * @param model the model to set.
          * @return {@code this} builder.
          */
-        public SystemBuilder setModel(Model model)
+        public Builder setModel(Model model)
         {
             this.model = model;
             return this;
@@ -204,7 +204,7 @@ public class SystemInfo
          * @param serialNumber the serial number.
          * @return {@code this} builder.
          */
-        public SystemBuilder setSerialNumber(String serialNumber)
+        public Builder setSerialNumber(String serialNumber)
         {
             this.serialNumber = serialNumber;
             return this;
@@ -226,7 +226,7 @@ public class SystemInfo
          * @param firmwareVersion the firmware version.
          * @return {@code this} builder.
          */
-        public SystemBuilder setFirmwareVersion(String firmwareVersion)
+        public Builder setFirmwareVersion(String firmwareVersion)
         {
             this.firmwareVersion = firmwareVersion;
             return this;
@@ -248,7 +248,7 @@ public class SystemInfo
          * @param time the time
          * @return {@code this} builder.
          */
-        public SystemBuilder setTime(String time)
+        public Builder setTime(String time)
         {
             this.time = time;
             return this;
@@ -270,7 +270,7 @@ public class SystemInfo
          * @param hasPassword the state of the password.
          * @return {@code this} builder.
          */
-        public SystemBuilder setHasPassword(Boolean hasPassword)
+        public Builder setHasPassword(Boolean hasPassword)
         {
             this.hasPassword = hasPassword;
             return this;

@@ -2,7 +2,7 @@ package com.interactive.cueserver.data.playback;
 
 /**
  * Identifies a playback.
- *
+ * <p>
  * author: Chris Reising
  */
 public enum Playback

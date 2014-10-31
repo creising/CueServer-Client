@@ -2,7 +2,7 @@ package com.interactive.cueserver.cli.actions;
 
 /**
  * Defines actions that may be executed from the test CLI.
- *
+ * <p>
  * author: Chris Reising
  */
 public interface Action

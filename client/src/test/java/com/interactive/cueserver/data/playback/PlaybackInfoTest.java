@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests {@link PlaybackInfo}.
- *
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackInfoTest

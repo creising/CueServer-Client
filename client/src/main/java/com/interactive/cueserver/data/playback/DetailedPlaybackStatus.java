@@ -5,7 +5,7 @@ import com.interactive.cueserver.data.cue.Cue;
 
 /**
  * Contains detailed information for a CueServer's playback.
- *
+ * <p>
  * author: Chris Reising
  */
 public class DetailedPlaybackStatus extends AbstractPlaybackInfo
@@ -52,8 +52,8 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
     /**
      * Gets the state of the playback.
      *
-     * @return {@code true} if the playback is timingDisabled, {@code false} if it is
-     *         normal.
+     * @return {@code true} if the playback's timingDisabled, {@code false} if
+     *         it is normal.
      */
     public boolean isTimingDisabled()
     {
@@ -81,7 +81,7 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
     }
 
     /**
-     * The cue linked with the cue currently running.
+     * The cue linked with the current cue.
      *
      * @return the linked cue, or {@code null} if no cue is linked.
      */
@@ -132,7 +132,8 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
         /**
          * Sets the value of the {@link #timingDisabled} field.
          *
-         * @return This builder.
+         * @param timingDisabled the state of the timing.
+         * @return {@code this} builder.
          */
         public Builder setTimingDisabled(boolean timingDisabled)
         {
@@ -153,7 +154,8 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
         /**
          * Sets the value of the {@link #masterLevel} field.
          *
-         * @return This builder.
+         * @param masterLevel the master level.
+         * @return {@code this} builder.
          */
         public Builder setMasterLevel(int masterLevel)
         {
@@ -174,7 +176,8 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
         /**
          * Sets the value of the {@link #combineMode} field.
          *
-         * @return This builder.
+         * @param combineMode the mode of the playback.
+         * @return {@code this} builder.
          */
         public Builder setCombinedMode(CombineMode combineMode)
         {
@@ -185,7 +188,7 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
         /**
          * Gets the current value of the {@link #linkedCue} field.
          *
-         * @return the {@link #linkedCue} value.
+         * @return The {@link #linkedCue} value.
          */
         public Cue getLinkedCue()
         {
@@ -193,9 +196,11 @@ public class DetailedPlaybackStatus extends AbstractPlaybackInfo
         }
 
         /**
-         * Sets the value of the {@link #timingDisabled} field.
+         * Sets the value of the {@link #linkedCue} field.
          *
-         * @return This builder.
+         * @param linkedCue the cue the current cue is linked with. Can be
+         *        {@code null}.
+         * @return {@code this} builder.
          */
         public Builder setLinkedCue(Cue linkedCue)
         {

@@ -4,8 +4,8 @@ package com.interactive.cueserver.data.cue;
 import static com.google.common.base.Preconditions.*;
 
 /**
- * Contains the name a number of a cue.
- *
+ * Contains the name and number of a cue.
+ * <p>
  * author: Chris Reising
  */
 public class Cue
@@ -17,7 +17,7 @@ public class Cue
     private final String name;
 
     /**
-     * Creates a new {@code Cue} with no name..
+     * Creates a new {@code Cue} with no name.
      *
      * @param number the cue number. Must be greater than 0.
      * @throws IllegalArgumentException if {@code number} is not positive.
