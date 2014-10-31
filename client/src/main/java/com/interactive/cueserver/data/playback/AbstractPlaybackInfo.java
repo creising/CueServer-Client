@@ -79,7 +79,7 @@ public abstract class AbstractPlaybackInfo
     }
 
     /**
-     * Builder for {@code PlaybackInfo}.
+     * Builder for {@link AbstractPlaybackInfo}.
      */
     @SuppressWarnings("rawtypes")
     public abstract static class Builder

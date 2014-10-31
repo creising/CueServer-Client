@@ -345,6 +345,14 @@ public class HttpCueServerClient implements CueServerClient
         return parseCue(rawNumber, null);
     }
 
+    /**
+     * Creates a {@link Cue} from the given number and name.
+     *
+     * @param rawNumber the cue number from the CueServer.
+     * @param name the name, or {@code null} if the name is not known.
+     * @return the {@link Cue} or {@code null} if the cue number is
+     *         65535 or 0.
+     */
     @VisibleForTesting
     protected static Cue parseCue(int rawNumber, String name)
     {
@@ -356,6 +364,13 @@ public class HttpCueServerClient implements CueServerClient
         return cueNumber;
     }
 
+    /**
+     * Parses the given integer into a boolean.
+     *
+     * @param value the value to parse.
+     * @return {@code true} if {@code value} not 0, {@code false} if
+     *         {@code value} is 0.
+     */
     private static boolean parseBoolean(int value)
     {
         return value != 0;
