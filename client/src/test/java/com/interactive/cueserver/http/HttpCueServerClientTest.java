@@ -167,6 +167,18 @@ public class HttpCueServerClientTest
         new HttpCueServerClient(testUrl, 0, null);
     }
 
+    @Test
+    public void testByteToString()
+    {
+        Integer[] array = new Integer[2];
+        array[0] = 65;
+        array[1] = 66;
+        HttpCueServerClient.ParseStruct<String> struct =
+                HttpCueServerClient.bytesToString(array, 0, 2);
+
+        assertThat(struct.value, is("AB"));
+    }
+
     /**
      * Test a valid request and response.
      */
@@ -385,7 +397,7 @@ public class HttpCueServerClientTest
     @Test
     public void parseCueNumberMax()
     {
-        assertThat(cueServerClient.parseCueNumber(65535), nullValue());
+        assertThat(cueServerClient.parseCue(65535), nullValue());
     }
 
     /**
@@ -394,7 +406,7 @@ public class HttpCueServerClientTest
     @Test
     public void parseCueNumberMin()
     {
-        assertThat(cueServerClient.parseCueNumber(0), nullValue());
+        assertThat(cueServerClient.parseCue(0), nullValue());
     }
 
     /**
@@ -495,7 +507,7 @@ public class HttpCueServerClientTest
     @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void endTooHigh()
     {
-        HttpCueServerClient.checkIndex(new Integer[10], 9, 10);
+        HttpCueServerClient.checkIndex(new Integer[10], 9, 11);
     }
 
     /**

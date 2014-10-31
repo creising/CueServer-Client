@@ -30,7 +30,11 @@ public class PlaybackInfoTest
     @Test
     public void testConstructorAllArguments()
     {
-        PlaybackInfo playbackInfo = new PlaybackInfo(pb, cc, nc);
+        PlaybackInfo playbackInfo = new PlaybackInfo.Builder()
+                .setPlayback(pb)
+                .setCurrentCue(cc)
+                .setNextCue(nc)
+                .build();
 
         assertThat(playbackInfo.getPlayback(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), is(cc));
@@ -46,12 +50,23 @@ public class PlaybackInfoTest
     public void testConstructorOptionalArguments()
     {
 
-        PlaybackInfo playbackInfo = new PlaybackInfo(pb, null, null);
+        PlaybackInfo playbackInfo = new PlaybackInfo.Builder()
+                .setPlayback(pb)
+                .build();
 
         assertThat(playbackInfo.getPlayback(), is(pb));
         assertThat(playbackInfo.getCurrentCue(), nullValue());
         assertThat(playbackInfo.getNextCue(), nullValue());
 
         assertThat(playbackInfo.toString(), containsString("PlaybackInfo"));
+    }
+
+    /**
+     * A null playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void nullPlayback()
+    {
+        new PlaybackInfo.Builder().build();
     }
 }

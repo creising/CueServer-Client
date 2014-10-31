@@ -1,5 +1,7 @@
 package com.interactive.cueserver;
 
+import com.interactive.cueserver.data.playback.DetailedPlaybackStatus;
+import com.interactive.cueserver.data.playback.Playback;
 import com.interactive.cueserver.data.playback.PlaybackStatus;
 import com.interactive.cueserver.data.system.SystemInfo;
 
@@ -25,6 +27,15 @@ public interface CueServerClient
      *         CueServer.
      */
     PlaybackStatus getPlaybackStatus();
+
+    /**
+     * Gets detailed information for the given playback.
+     *
+     * @return {@code null} if there was an error communicating with the
+     *         CueServer.
+     * @throws NullPointerException if {@code playback} is {@code null}.
+     */
+    DetailedPlaybackStatus getDetailedPlaybackInfo(Playback playback);
 
     /**
      * Gets the current output levels.

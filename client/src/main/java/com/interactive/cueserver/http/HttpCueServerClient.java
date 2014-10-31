@@ -3,6 +3,8 @@ package com.interactive.cueserver.http;
 import com.google.common.annotations.VisibleForTesting;
 import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.data.cue.Cue;
+import com.interactive.cueserver.data.playback.CombineMode;
+import com.interactive.cueserver.data.playback.DetailedPlaybackStatus;
 import com.interactive.cueserver.data.playback.Playback;
 import com.interactive.cueserver.data.system.Model;
 import com.interactive.cueserver.data.playback.PlaybackInfo;
@@ -32,6 +34,12 @@ public class HttpCueServerClient implements CueServerClient
 
     /** Expected size of the array returned when requesting playback status. */
     private static final int PLAYBACK_STATUS_ARRAY_LEN = 48;
+
+    /**
+     * Expected size of the array returned when requesting detailed playback
+     * status.
+     */
+    private static final int DETAILED_PLAYBACK_STATUS_ARRAY_LEN = 96;
 
     /** The host and port of the CueServer the client is connected to. */
     private final String url;
@@ -152,29 +160,80 @@ public class HttpCueServerClient implements CueServerClient
             PlaybackStatus.PlaybackStatusBuilder builder =
                     new PlaybackStatus.PlaybackStatusBuilder();
 
-            PlaybackInfo pb = new PlaybackInfo(Playback.PLAYBACK_1,
-                    parseCueNumber(unsignedIntToInt(byteArray, 0)),
-                    parseCueNumber(unsignedIntToInt(byteArray, 2)));
+            PlaybackInfo pb = new PlaybackInfo.Builder()
+                    .setPlayback(Playback.PLAYBACK_1)
+                    .setCurrentCue(
+                            parseCue(unsignedIntToInt(byteArray, 0)))
+                    .setNextCue(
+                            parseCue(unsignedIntToInt(byteArray, 2)))
+                    .build();
             builder.setPlayback1(pb);
 
-            pb = new PlaybackInfo(Playback.PLAYBACK_2,
-                    parseCueNumber(unsignedIntToInt(byteArray, 12)),
-                    parseCueNumber(unsignedIntToInt(byteArray, 14)));
+            pb = new PlaybackInfo.Builder()
+                    .setPlayback(Playback.PLAYBACK_2)
+                    .setCurrentCue(
+                            parseCue(unsignedIntToInt(byteArray, 12)))
+                    .setNextCue(
+                            parseCue(unsignedIntToInt(byteArray, 14)))
+                    .build();
             builder.setPlayback2(pb);
 
-            pb = new PlaybackInfo(Playback.PLAYBACK_3,
-                    parseCueNumber(unsignedIntToInt(byteArray, 24)),
-                    parseCueNumber(unsignedIntToInt(byteArray, 26)));
+            pb = new PlaybackInfo.Builder()
+                    .setPlayback(Playback.PLAYBACK_3)
+                    .setCurrentCue(
+                            parseCue(unsignedIntToInt(byteArray, 24)))
+                    .setNextCue(
+                            parseCue(unsignedIntToInt(byteArray, 26)))
+                    .build();
             builder.setPlayback3(pb);
 
-            pb = new PlaybackInfo(Playback.PLAYBACK_4,
-                    parseCueNumber(unsignedIntToInt(byteArray, 36)),
-                    parseCueNumber(unsignedIntToInt(byteArray, 38)));
+            pb = new PlaybackInfo.Builder()
+                    .setPlayback(Playback.PLAYBACK_4)
+                    .setCurrentCue(
+                            parseCue(unsignedIntToInt(byteArray, 36)))
+                    .setNextCue(
+                            parseCue(unsignedIntToInt(byteArray, 38)))
+                    .build();
             builder.setPlayback4(pb);
 
             status = builder.build();
         }
 
+        return status;
+    }
+
+    @Override
+    public DetailedPlaybackStatus getDetailedPlaybackInfo(Playback playback)
+    {
+        Integer[] byteArray = httpClient.submitHttpGetRequest(
+                url + "/get.cgi/?req=PI&id=" + playback.getPlaybackId());
+
+
+        DetailedPlaybackStatus status = null;
+        if(byteArray == null ||
+                byteArray.length != DETAILED_PLAYBACK_STATUS_ARRAY_LEN)
+        {
+            LOGGER.warn("The array returned from the system is not the " +
+                            "correct size. Expected {}",
+                    PLAYBACK_STATUS_ARRAY_LEN);
+        }
+        else
+        {
+            ParseStruct<String> currentName = bytesToString(byteArray, 32, 32);
+            ParseStruct<String> nextName =
+                    bytesToString(byteArray, currentName.nextIndex, 32);
+            status = new DetailedPlaybackStatus.Builder()
+                    .setPlayback(playback)
+                    .setTimingDisabled(parseBoolean(byteArray[1]))
+                    .setMasterLevel(byteArray[2])
+                    .setCombinedMode(convertCombineMode(byteArray[3]))
+                    .setCurrentCue(parseCue(unsignedIntToInt(byteArray, 12),
+                            currentName.value))
+                    .setNextCue(parseCue(unsignedIntToInt(byteArray, 14),
+                            nextName.value))
+                    .setLinkedCue(parseCue(unsignedIntToInt(byteArray, 22)))
+                    .build();
+        }
         return status;
     }
 
@@ -241,6 +300,28 @@ public class HttpCueServerClient implements CueServerClient
         return model;
     }
 
+    private static CombineMode convertCombineMode(int value)
+    {
+        CombineMode combineMode;
+        switch (value)
+        {
+            case 0:
+                combineMode = CombineMode.MERGE;
+                break;
+            case 1:
+                combineMode = CombineMode.OVERRIDE;
+                break;
+            case 2:
+                combineMode = CombineMode.SCALE;
+                break;
+            default:
+                LOGGER.warn("Unknown combine mode {}", value);
+                combineMode = CombineMode.UNKNOWN;
+                break;
+        }
+        return combineMode;
+    }
+
     /**
      * Parses the given integer value into a decimal cue number.
      *
@@ -249,14 +330,25 @@ public class HttpCueServerClient implements CueServerClient
      *         number.
      */
     @VisibleForTesting
-    protected Cue parseCueNumber(int rawNumber)
+    protected Cue parseCue(int rawNumber)
+    {
+        return parseCue(rawNumber, null);
+    }
+
+    @VisibleForTesting
+    protected Cue parseCue(int rawNumber, String name)
     {
         Cue cueNumber = null;
         if(rawNumber != 65535 && rawNumber != 0)
         {
-            cueNumber = new Cue(rawNumber / 10d);
+            cueNumber = new Cue(rawNumber / 10d, name);
         }
         return cueNumber;
+    }
+
+    private static boolean parseBoolean(int value)
+    {
+        return value != 0;
     }
 
     /**
@@ -270,17 +362,18 @@ public class HttpCueServerClient implements CueServerClient
      *         start parsing from.
      * @throws ArrayIndexOutOfBoundsException {@see checkIndex}.
      */
-    private static ParseStruct<String> bytesToString(Integer[] byteArray,
+    @VisibleForTesting
+    protected static ParseStruct<String> bytesToString(Integer[] byteArray,
                                                      int startIndex,
                                                      int size)
     {
         // find the last (exclusive) index to start from.
-        int endIndex = startIndex + size;
-        checkIndex(byteArray, startIndex, endIndex);
+        int nextAvailIndex = startIndex + size;
+        checkIndex(byteArray, startIndex, nextAvailIndex);
 
         StringBuilder builder = new StringBuilder();
         int index = startIndex;
-        for(; index < endIndex ; index++)
+        for(; index < nextAvailIndex ; index++)
         {
             Integer value = byteArray[index];
 
@@ -293,7 +386,7 @@ public class HttpCueServerClient implements CueServerClient
 
         ParseStruct<String> parseStruct = new ParseStruct<String>();
         parseStruct.value = builder.toString();
-        parseStruct.nextIndex = index;
+        parseStruct.nextIndex = nextAvailIndex;
         return parseStruct;
     }
 
@@ -350,7 +443,7 @@ public class HttpCueServerClient implements CueServerClient
                      "{}.";
             isValid = false;
         }
-        else if(endIndex >= arrayLength)
+        else if(endIndex > arrayLength)
         {
             errorMessage = "The end index cannot >= array length.";
             isValid = false;
@@ -363,7 +456,7 @@ public class HttpCueServerClient implements CueServerClient
 
         if(!isValid)
         {
-            LOGGER.debug("The array indices are not valid {} {} {}.",
+            LOGGER.error("The array indices are not valid {} {} {}.",
                     startIndex, endIndex, arrayLength);
             throw new ArrayIndexOutOfBoundsException(errorMessage);
         }
@@ -374,11 +467,12 @@ public class HttpCueServerClient implements CueServerClient
      * next index the parser should start from.
      * @param <T> the type being parsed.
      */
-    private static final class ParseStruct<T>
+    @VisibleForTesting
+    protected static final class ParseStruct<T>
     {
         /** The parsed value. */
-        private T value;
+        protected T value;
         /** The next index. */
-        private int nextIndex;
+        protected int nextIndex;
     }
 }

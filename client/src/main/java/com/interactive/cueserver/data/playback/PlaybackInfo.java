@@ -1,85 +1,38 @@
 package com.interactive.cueserver.data.playback;
 
-import com.interactive.cueserver.data.cue.Cue;
-
-import static com.google.common.base.Preconditions.*;
-
 /**
  * Contains the status of a playback.
  *
  * author: Chris Reising
  */
-public class PlaybackInfo
+public class PlaybackInfo extends AbstractPlaybackInfo
 {
-    /** The playback being reported. */
-    private final Playback playback;
-
-    /** The current cue. */
-    private final Cue currentCue;
-
-    /** The next cue. */
-    private final Cue nextCue;
-
     /**
      * Creates a new {@code PlaybackInfo}.
      *
-     * @param playback the playback being reported.
-     * @param currentCue the current cue, or {@code null} if the playback does
-     *                   not have a current cue.
-     * @param nextCue the next cue, or {@code null} if the playback does not
-     *                 have a next cue.
+     * @param builder the builder used to create the object.
      * @throws NullPointerException if {@code playback} is {@code null}.
      */
-    public PlaybackInfo(Playback playback,
-                        Cue currentCue,
-                        Cue nextCue)
+    protected PlaybackInfo(Builder builder)
     {
-        this.playback = checkNotNull(playback,
-                "playback cannot be null");
-        this.currentCue = currentCue;
-        this.nextCue = nextCue;
+        super(builder);
     }
 
     /**
-     * Gets the playback being reported.
-     *
-     * @return Never {@code null}.
+     * Builder for {@code PlaybackInfo}.
      */
-    public Playback getPlayback()
+    public static class Builder
+        extends AbstractPlaybackInfo.Builder<Builder, PlaybackInfo>
     {
-        return playback;
-    }
-
-    /**
-     * Gets the current cue.
-     *
-     * @return {@code null} if the playback does not have a cue loaded.
-     */
-    public Cue getCurrentCue()
-    {
-        return currentCue;
-    }
-
-    /**
-     * Gets the next cue.
-     *
-     * @return {@code null} if the playback does not have a next cue.
-     */
-    public Cue getNextCue()
-    {
-        return nextCue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return "PlaybackInfo{" +
-                "playback=" + playback +
-                ", currentCue=" + currentCue +
-                ", nextCue=" + nextCue +
-                '}';
+        /**
+         * Build a {@code PlaybackInfo} object from the values in the builder.
+         *
+         * @return Never {@code null}
+         */
+        @Override
+        public PlaybackInfo build()
+        {
+            return new PlaybackInfo(this);
+        }
     }
 }
