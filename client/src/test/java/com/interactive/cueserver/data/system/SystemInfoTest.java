@@ -1,5 +1,7 @@
-package com.interactive.cueserver.data;
+package com.interactive.cueserver.data.system;
 
+import com.interactive.cueserver.data.system.Model;
+import com.interactive.cueserver.data.system.SystemInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;

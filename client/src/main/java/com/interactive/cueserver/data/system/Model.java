@@ -1,4 +1,4 @@
-package com.interactive.cueserver.data;
+package com.interactive.cueserver.data.system;
 
 /**
  * Provides the available CueServer models.
