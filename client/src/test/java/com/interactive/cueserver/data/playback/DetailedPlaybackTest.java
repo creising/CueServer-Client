@@ -3,6 +3,7 @@ package com.interactive.cueserver.data.playback;
 import com.interactive.cueserver.data.cue.Cue;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,6 +60,8 @@ public class DetailedPlaybackTest
         assertThat(playbackInfo.isTimingDisabled(), is(stopped));
         assertThat(playbackInfo.getMasterLevel(), is(masterLevel));
         assertThat(playbackInfo.getPlayback(), is(pb));
+        assertThat(playbackInfo.toString(),
+                containsString("DetailedPlaybackInfo"));
     }
 
     /**
@@ -143,10 +146,11 @@ public class DetailedPlaybackTest
     /**
      * A master value below its minimum value will cause an exception.
      */
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void invalidMasterValMin()
     {
         new DetailedPlaybackStatus.Builder()
+                .setPlayback(Playback.PLAYBACK_1)
                 .setCurrentCue(cc)
                 .setNextCue(nc)
                 .setLinkedCue(linkedCue)
@@ -159,10 +163,11 @@ public class DetailedPlaybackTest
     /**
      * A master value above its maximum value will cause an exception.
      */
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void invalidMasterValMax()
     {
         new DetailedPlaybackStatus.Builder()
+                .setPlayback(Playback.PLAYBACK_1)
                 .setCurrentCue(cc)
                 .setNextCue(nc)
                 .setLinkedCue(linkedCue)

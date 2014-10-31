@@ -202,12 +202,14 @@ public class HttpCueServerClient implements CueServerClient
         return status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DetailedPlaybackStatus getDetailedPlaybackInfo(Playback playback)
     {
         Integer[] byteArray = httpClient.submitHttpGetRequest(
                 url + "/get.cgi/?req=PI&id=" + playback.getPlaybackId());
-
 
         DetailedPlaybackStatus status = null;
         if(byteArray == null ||
@@ -222,6 +224,7 @@ public class HttpCueServerClient implements CueServerClient
             ParseStruct<String> currentName = bytesToString(byteArray, 32, 32);
             ParseStruct<String> nextName =
                     bytesToString(byteArray, currentName.nextIndex, 32);
+
             status = new DetailedPlaybackStatus.Builder()
                     .setPlayback(playback)
                     .setTimingDisabled(parseBoolean(byteArray[1]))
@@ -269,7 +272,7 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
-     * Converts the given integer value to an enum.
+     * Converts the given integer value to {@code Model}.
      *
      * @param modelValue the model to convert.
      * @return the model.
@@ -300,7 +303,14 @@ public class HttpCueServerClient implements CueServerClient
         return model;
     }
 
-    private static CombineMode convertCombineMode(int value)
+    /**
+     * Converts the given value to a {@code CombineMode}.
+     *
+     * @param value the value to convert.
+     * @return Never {@code null}.
+     */
+    @VisibleForTesting
+    protected static CombineMode convertCombineMode(int value)
     {
         CombineMode combineMode;
         switch (value)
@@ -330,13 +340,13 @@ public class HttpCueServerClient implements CueServerClient
      *         number.
      */
     @VisibleForTesting
-    protected Cue parseCue(int rawNumber)
+    protected static Cue parseCue(int rawNumber)
     {
         return parseCue(rawNumber, null);
     }
 
     @VisibleForTesting
-    protected Cue parseCue(int rawNumber, String name)
+    protected static Cue parseCue(int rawNumber, String name)
     {
         Cue cueNumber = null;
         if(rawNumber != 65535 && rawNumber != 0)
@@ -404,7 +414,7 @@ public class HttpCueServerClient implements CueServerClient
      *                                        {@code array}.
      */
     @VisibleForTesting
-    protected int unsignedIntToInt(Integer[] array, int startIndex)
+    protected static int unsignedIntToInt(Integer[] array, int startIndex)
     {
         return ((array[startIndex + 1]) <<8 ) | (array[startIndex] & 0xFF);
     }

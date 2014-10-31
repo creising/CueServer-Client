@@ -1,6 +1,8 @@
 package com.interactive.cueserver.http;
 
 import com.interactive.cueserver.data.cue.Cue;
+import com.interactive.cueserver.data.playback.CombineMode;
+import com.interactive.cueserver.data.playback.DetailedPlaybackStatus;
 import com.interactive.cueserver.data.playback.Playback;
 import com.interactive.cueserver.data.system.Model;
 import com.interactive.cueserver.data.playback.PlaybackInfo;
@@ -397,7 +399,7 @@ public class HttpCueServerClientTest
     @Test
     public void parseCueNumberMax()
     {
-        assertThat(cueServerClient.parseCue(65535), nullValue());
+        assertThat(HttpCueServerClient.parseCue(65535), nullValue());
     }
 
     /**
@@ -406,7 +408,7 @@ public class HttpCueServerClientTest
     @Test
     public void parseCueNumberMin()
     {
-        assertThat(cueServerClient.parseCue(0), nullValue());
+        assertThat(HttpCueServerClient.parseCue(0), nullValue());
     }
 
     /**
@@ -425,6 +427,133 @@ public class HttpCueServerClientTest
         SystemInfo info = cueServerClient.getSystemInfo();
 
         assertThat(info, nullValue());
+    }
+
+    /**
+     * Test converting detailed playback information.
+     */
+    @Test
+    public void getDetailedPlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        String ccName =  "current cue";
+        String ncName = "next cue";
+        Integer[] array = new Integer[96];
+        Arrays.fill(array, 0);
+        array[1] = 1;   // time is disabled
+        array[2] = 255; // level is full
+        array[3] = 1;   // is in override mode
+        array[12] = 11; // current cue is 1.1
+        array[14] = 12; // next cue is 1.2
+        array[22] = 30; // linked cue is 3.0
+
+        // current cue name
+        fillArray(array, 32, ccName);
+        // next cue name
+        fillArray(array, 64, ncName);
+
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(array);
+
+        DetailedPlaybackStatus playbackStatus =
+                cueServerClient.getDetailedPlaybackInfo(Playback.PLAYBACK_1);
+
+        Cue cc = playbackStatus.getCurrentCue();
+        Cue nc = playbackStatus.getNextCue();
+        Cue lc = playbackStatus.getLinkedCue();
+        assertThat(cc.getNumber(), is(1.1));
+        assertThat(cc.getName(), is(ccName));
+        assertThat(nc.getNumber(), is(1.2));
+        assertThat(nc.getName(), is(ncName));
+        assertThat(lc.getNumber(), is(3.0));
+        assertThat(lc.getName(), nullValue());
+
+        assertThat(playbackStatus.isTimingDisabled(), is(true));
+        assertThat(playbackStatus.getMasterLevel(), is(255));
+        assertThat(playbackStatus.getCombineMode(), is(CombineMode.OVERRIDE));
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(testUrl + ":80/get.cgi/?req=PI&id=1"));
+    }
+
+    /**
+     * An array of the wrong size will result in {@code null}
+     */
+    @Test
+    public void getDetailedPlaybackArrayTooSmall()
+    {
+        Integer[] array = new Integer[95];
+
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(array);
+
+        assertThat(cueServerClient.getDetailedPlaybackInfo(Playback.PLAYBACK_1),
+                nullValue());
+    }
+
+    /**
+     * A {@code null} array will result in {@code null}
+     */
+    @Test
+    public void getDetailedPlaybackNullFromClient()
+    {
+        when(mockedHttpClient.submitHttpGetRequest(
+                anyString())).thenReturn(null);
+
+        assertThat(cueServerClient.getDetailedPlaybackInfo(Playback.PLAYBACK_1),
+                nullValue());
+    }
+
+    /**
+     * Passing {@code null} for a playback will result in an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void getDetailedPlaybackNullPlayback()
+    {
+        cueServerClient.getDetailedPlaybackInfo(null);
+    }
+
+    /**
+     * Convert merge mode.
+     */
+    @Test
+    public void convertMergeMode()
+    {
+        assertThat(HttpCueServerClient.convertCombineMode(0),
+                is(CombineMode.MERGE));
+    }
+
+    /**
+     * Convert override mode.
+     */
+    @Test
+    public void convertOverrideMode()
+    {
+        assertThat(HttpCueServerClient.convertCombineMode(1),
+                is(CombineMode.OVERRIDE));
+    }
+
+    /**
+     * Convert scale mode.
+     */
+    @Test
+    public void convertScaleMode()
+    {
+        assertThat(HttpCueServerClient.convertCombineMode(2),
+                is(CombineMode.SCALE));
+    }
+
+    /**
+     * Convert an unknown mode.
+     */
+    @Test
+    public void convertUnknownMode()
+    {
+        assertThat(HttpCueServerClient.convertCombineMode(3),
+                is(CombineMode.UNKNOWN));
     }
 
     /**
@@ -516,13 +645,13 @@ public class HttpCueServerClientTest
     @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void parseInBadStartIndex()
     {
-        cueServerClient.unsignedIntToInt(new Integer[0], 1);
+        HttpCueServerClient.unsignedIntToInt(new Integer[0], 1);
     }
 
     /**
      * Helper method to assert {@link PlaybackInfo}.
      *
-     * @param info the object to asseert.
+     * @param info the object to assert.
      * @param number the expected playback number.
      * @param cc the expected current cue.
      * @param nc the expected next cue.

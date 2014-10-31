@@ -7,8 +7,12 @@ package com.interactive.cueserver.data.playback;
  */
 public enum CombineMode
 {
+    /** Merge mode. */
     MERGE,
-    SCALE,
+    /** Combine mode. */
     OVERRIDE,
+    /** Scale mode. */
+    SCALE,
+    /** Mode is unknown. */
     UNKNOWN
 }
