@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Contains the playback status for each playback available in the CueServer.
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackStatus
@@ -26,7 +27,7 @@ public class PlaybackStatus
      * @param builder the builder.
      * @throws NullPointerException if {@code builder} is {@code null}.
      */
-    private PlaybackStatus(PlaybackStatusBuilder builder)
+    private PlaybackStatus(Builder builder)
     {
         this.playbackInfo1 = Preconditions.checkNotNull(builder.getPlayback1(),
                 "playback1 cannot be null");
@@ -95,7 +96,7 @@ public class PlaybackStatus
     /**
      * Builder for the {@link PlaybackStatus} object.
      */
-    public static class PlaybackStatusBuilder
+    public static class Builder
     {
         /** The state of playback #1. */
         private PlaybackInfo playbackInfo1;
@@ -125,7 +126,7 @@ public class PlaybackStatus
          * @param playbackInfo1 the value for playback 1.
          * @return a reference to {@code this} builder.
          */
-        public PlaybackStatusBuilder setPlayback1(PlaybackInfo playbackInfo1)
+        public Builder setPlayback1(PlaybackInfo playbackInfo1)
         {
             this.playbackInfo1 = playbackInfo1;
             return this;
@@ -147,7 +148,7 @@ public class PlaybackStatus
          * @param playbackInfo2 the value for playback 2.
          * @return a reference to {@code this} builder.
          */
-        public PlaybackStatusBuilder setPlayback2(PlaybackInfo playbackInfo2)
+        public Builder setPlayback2(PlaybackInfo playbackInfo2)
         {
             this.playbackInfo2 = playbackInfo2;
             return this;
@@ -169,7 +170,7 @@ public class PlaybackStatus
          * @param playbackInfo3 the value for playback 3.
          * @return a reference to {@code this} builder.
          */
-        public PlaybackStatusBuilder setPlayback3(PlaybackInfo playbackInfo3)
+        public Builder setPlayback3(PlaybackInfo playbackInfo3)
         {
             this.playbackInfo3 = playbackInfo3;
             return this;
@@ -191,7 +192,7 @@ public class PlaybackStatus
          * @param playbackInfo4 the value for playback 4.
          * @return a reference to {@code this} builder.
          */
-        public PlaybackStatusBuilder setPlayback4(PlaybackInfo playbackInfo4)
+        public Builder setPlayback4(PlaybackInfo playbackInfo4)
         {
             this.playbackInfo4 = playbackInfo4;
             return this;

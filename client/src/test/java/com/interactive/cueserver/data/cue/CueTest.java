@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests {@link Cue}
- *
+ * <p>
  * author: Chris Reising
  */
 public class CueTest

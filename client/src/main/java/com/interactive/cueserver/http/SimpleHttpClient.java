@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides a simple interface for submitting HTTP get requests.
- *
+ * <p>
  * author: Chris Reising
  */
 public class SimpleHttpClient
@@ -41,6 +41,8 @@ public class SimpleHttpClient
     /**
      * Creates a new {@code HttpClientWrapper} with the provided
      * {@link org.apache.http.impl.client.CloseableHttpClient}.
+     *
+     * @param httpClient the wrapped client.
      * @throws NullPointerException if {@code httpClient} is {@code null}.
      */
     public SimpleHttpClient(CloseableHttpClient httpClient)
@@ -83,7 +85,7 @@ public class SimpleHttpClient
     }
 
     /**
-     * Helper methods that reads the bytes from the given stream and creates
+     * Helper method that reads the bytes from the given stream and creates
      * an array of integers.
      * @param stream the stream to read. The stream will be closed before this
      *               method returns.

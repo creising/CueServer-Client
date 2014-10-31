@@ -1,7 +1,5 @@
 package com.interactive.cueserver.data.system;
 
-import com.interactive.cueserver.data.system.Model;
-import com.interactive.cueserver.data.system.SystemInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -10,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tests the {@code SystemInfo} class.
- *
+ * <p>
  * @author Chris Reising
  */
 public class SystemInfoTest
@@ -36,7 +34,7 @@ public class SystemInfoTest
     @Test
     public void testConstruction()
     {
-        SystemInfo info = new SystemInfo.SystemBuilder().
+        SystemInfo info = new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setModel(model).
                 setSerialNumber(serialNumber).
@@ -59,7 +57,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testNullDevice()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setModel(model).
                 setSerialNumber(serialNumber).
                 setFirmwareVersion(firmwareVersion).
@@ -74,7 +72,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testNullModel()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setSerialNumber(serialNumber).
                 setFirmwareVersion(firmwareVersion).
@@ -89,7 +87,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testSerialNumber()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setModel(model).
                 setFirmwareVersion(firmwareVersion).
@@ -104,7 +102,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testNullFirmware()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setModel(model).
                 setSerialNumber(serialNumber).
@@ -119,7 +117,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testNullTime()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setModel(model).
                 setSerialNumber(serialNumber).
@@ -134,7 +132,7 @@ public class SystemInfoTest
     @Test(expected = NullPointerException.class)
     public void testNullPassword()
     {
-        new SystemInfo.SystemBuilder().
+        new SystemInfo.Builder().
                 setDeviceName(deviceName).
                 setModel(model).
                 setSerialNumber(serialNumber).

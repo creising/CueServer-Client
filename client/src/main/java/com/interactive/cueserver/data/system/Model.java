@@ -1,8 +1,8 @@
 package com.interactive.cueserver.data.system;
 
 /**
- * Provides the available CueServer models.
- *
+ * Contains the available CueServer models.
+ * <p>
  * author: Chris Reising
  */
 public enum Model

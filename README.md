@@ -12,4 +12,13 @@ noted in CueServer's documentation, new requests should only be sent after a
 response from the previous request has been received from CueServer.
 
 ### Details
+For further information regarding the cue server, please visit:
 [Interactive Technologies](http://interactive-online.com)
+
+### Supported Operations
+The client library currently supports the following operations:
+
+- Retrieval of system information
+- Retrieval of playback information
+- Retrieval of level from the DMX output
+

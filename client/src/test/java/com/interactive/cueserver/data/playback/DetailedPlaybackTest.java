@@ -11,7 +11,7 @@ import static org.junit.Assert.assertSame;
 
 /**
  * Test {@link DetailedPlaybackStatus}.
- *
+ * <p>
  * author: Chris Reising
  */
 public class DetailedPlaybackTest

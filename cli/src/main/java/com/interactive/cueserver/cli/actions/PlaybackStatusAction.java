@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Example for retrieving the playback status from a CueServer.
- *
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackStatusAction implements Action

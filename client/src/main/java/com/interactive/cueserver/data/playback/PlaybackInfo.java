@@ -2,7 +2,7 @@ package com.interactive.cueserver.data.playback;
 
 /**
  * Contains the status of a playback.
- *
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackInfo extends AbstractPlaybackInfo

@@ -1,7 +1,5 @@
 package com.interactive.cueserver.data.playback;
 
-import com.interactive.cueserver.data.playback.PlaybackInfo;
-import com.interactive.cueserver.data.playback.PlaybackStatus;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertSame;
@@ -11,7 +9,7 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Tests the {@link PlaybackStatus}.
- *
+ * <p>
  * author: Chris Reising
  */
 public class PlaybackStatusTest
@@ -34,8 +32,8 @@ public class PlaybackStatusTest
     @Test
     public void buildInfo()
     {
-        PlaybackStatus.PlaybackStatusBuilder builder =
-                new PlaybackStatus.PlaybackStatusBuilder();
+        PlaybackStatus.Builder builder =
+                new PlaybackStatus.Builder();
 
         builder.setPlayback1(pb1);
         builder.setPlayback2(pb2);
@@ -58,8 +56,8 @@ public class PlaybackStatusTest
     @Test(expected = NullPointerException.class)
     public void missingPb1()
     {
-        PlaybackStatus.PlaybackStatusBuilder builder =
-                new PlaybackStatus.PlaybackStatusBuilder();
+        PlaybackStatus.Builder builder =
+                new PlaybackStatus.Builder();
 
         builder.setPlayback2(pb2);
         builder.setPlayback3(pb3);
@@ -74,8 +72,8 @@ public class PlaybackStatusTest
     @Test(expected = NullPointerException.class)
     public void missingPb2()
     {
-        PlaybackStatus.PlaybackStatusBuilder builder =
-                new PlaybackStatus.PlaybackStatusBuilder();
+        PlaybackStatus.Builder builder =
+                new PlaybackStatus.Builder();
 
         builder.setPlayback1(pb1);
         builder.setPlayback3(pb3);
@@ -90,8 +88,8 @@ public class PlaybackStatusTest
     @Test(expected = NullPointerException.class)
     public void missingPb3()
     {
-        PlaybackStatus.PlaybackStatusBuilder builder =
-                new PlaybackStatus.PlaybackStatusBuilder();
+        PlaybackStatus.Builder builder =
+                new PlaybackStatus.Builder();
 
         builder.setPlayback1(pb1);
         builder.setPlayback2(pb2);
@@ -106,8 +104,8 @@ public class PlaybackStatusTest
     @Test(expected = NullPointerException.class)
     public void missingPb4()
     {
-        PlaybackStatus.PlaybackStatusBuilder builder =
-                new PlaybackStatus.PlaybackStatusBuilder();
+        PlaybackStatus.Builder builder =
+                new PlaybackStatus.Builder();
 
         builder.setPlayback1(pb1);
         builder.setPlayback2(pb2);

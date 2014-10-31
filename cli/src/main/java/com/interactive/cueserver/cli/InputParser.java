@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 
 /**
  * Simple class for parsing input from the console.
- *
- * author: creising
- * Date: 7/25/14
- * Time: 10:47 PM
+ * <p>
+ * author: Chris Reising
  */
 public class InputParser
 {

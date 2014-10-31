@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Tests the {@code HttpCueServerClient} class.
- *
+ * <p>
  * author: Chris Reising
  */
 public class HttpCueServerClientTest

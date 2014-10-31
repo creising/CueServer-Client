@@ -1,6 +1,7 @@
-apply plugin: 'maven'
-apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
@@ -34,6 +35,20 @@ jacocoTestReport {
         csv.enabled false
         html.destination "${buildDir}/jacocoHtml"
     }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugs {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
 }
 
 compileJava {

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Tests the {@code HttpClientWrapper} class.
- *
+ * <p>
  * author: Chris Reising
  */
 public class SimpleHttpClientTest

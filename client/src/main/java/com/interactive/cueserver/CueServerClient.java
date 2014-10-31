@@ -7,7 +7,7 @@ import com.interactive.cueserver.data.system.SystemInfo;
 
 /**
  * Allows client to both retrieve and send commands to a CueServer.
- *
+ * <p>
  * author: Chris Reising
  */
 public interface CueServerClient
@@ -31,6 +31,7 @@ public interface CueServerClient
     /**
      * Gets detailed information for the given playback.
      *
+     * @param playback the playback to retrieve information for.
      * @return {@code null} if there was an error communicating with the
      *         CueServer.
      * @throws NullPointerException if {@code playback} is {@code null}.
@@ -40,7 +41,7 @@ public interface CueServerClient
     /**
      * Gets the current output levels.
      *
-     * @return the current output levels between [0, 255]. The array will always
+     * @return The current output levels between [0, 255]. The array will always
      *         contain a full DMX universe. This method will return
      *         {@code null} if there was an error communicating with the
      *         CueServer.

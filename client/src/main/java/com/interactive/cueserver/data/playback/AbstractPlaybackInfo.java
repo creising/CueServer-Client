@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Contains common information for a CueServer's playback.
- *
+ *  <p>
  * author: Chris Reising
  */
 public abstract class AbstractPlaybackInfo
@@ -21,7 +21,7 @@ public abstract class AbstractPlaybackInfo
     protected final Cue nextCue;
 
     /**
-     * Creates a new {@code PlaybackInfo}.
+     * Creates a new {@code AbstractPlaybackInfo}.
      *
      * @param builder the builder used to create the object.
      * @throws NullPointerException if {@code playback} is {@code null}.
@@ -80,6 +80,8 @@ public abstract class AbstractPlaybackInfo
 
     /**
      * Builder for {@link AbstractPlaybackInfo}.
+     * @param <T> The builder type.
+     * @param <U> The type being constructed by the builder.
      */
     @SuppressWarnings("rawtypes")
     public abstract static class Builder
@@ -107,7 +109,8 @@ public abstract class AbstractPlaybackInfo
         /**
          * Sets the value for the playback.
          *
-         * @param playback The value for the playback
+         * @param playback The value for the playback.
+         * @return {@code this} builder.
          */
         @SuppressWarnings("unchecked")
         public T setPlayback(Playback playback)
@@ -129,7 +132,8 @@ public abstract class AbstractPlaybackInfo
         /**
          * Sets the value for the current cue.
          *
-         * @param currentCue The value for the current cue
+         * @param currentCue The value for the current cue.
+         * @return {@code this} builder.
          */
         @SuppressWarnings("unchecked")
         public T setCurrentCue(Cue currentCue)
@@ -151,7 +155,8 @@ public abstract class AbstractPlaybackInfo
         /**
          * Sets the value for the next cue.
          *
-         * @param nextCue The value for the next cue
+         * @param nextCue The value for the next cue.
+         * @return {@code this} builder.
          */
         @SuppressWarnings("unchecked")
         public T setNextCue(Cue nextCue)
@@ -161,7 +166,7 @@ public abstract class AbstractPlaybackInfo
         }
 
         /**
-         * Build a {@code PlaybackInfo} object from the values in the builder.
+         * Build an object from the values in the builder.
          *
          * @return Never {@code null}
          */
