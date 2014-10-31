@@ -16,7 +16,7 @@ For further information regarding the cue server, please visit:
 [Interactive Technologies](http://interactive-online.com)
 
 ### Supported Operations
-Version 1.0 of the client library currently supports the following operations:
+The client library currently supports the following operations:
 
 - Retrieval of system information
 - Retrieval of playback information
