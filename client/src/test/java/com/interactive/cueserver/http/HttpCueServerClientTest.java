@@ -579,6 +579,30 @@ public class HttpCueServerClientTest
     }
 
     /**
+     * Test clearing a playback.
+     */
+    @Test
+    public void clearPlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.clearPlayback(Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+clear"));
+    }
+
+    /**
+     * A {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void clearPlaybackNullInput()
+    {
+        cueServerClient.clearPlayback(null);
+    }
+
+    /**
      * Convert merge mode.
      */
     @Test

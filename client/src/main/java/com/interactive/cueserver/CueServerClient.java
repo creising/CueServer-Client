@@ -65,4 +65,12 @@ public interface CueServerClient
      * @throws NullPointerException if {@code playback} is {@code null}.
      */
     void playCue(double cueNumber, Playback playback);
+
+    /**
+     * Clear the given playback.
+     *
+     * @param playback the playback to clear.
+     * @throws NullPointerException if {@code playback} is {@code null}.
+     */
+    void clearPlayback(Playback playback);
 }

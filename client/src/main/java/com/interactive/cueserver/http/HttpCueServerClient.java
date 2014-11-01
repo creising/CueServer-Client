@@ -298,6 +298,18 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clearPlayback(Playback playback)
+    {
+        String cmd = "p+" + playback.getPlaybackId() + "+clear";
+        LOGGER.debug("Cue command: {}", cmd);
+
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
      * Gets the URL of the CueServer.
      * @return Never {@code null}.
      */

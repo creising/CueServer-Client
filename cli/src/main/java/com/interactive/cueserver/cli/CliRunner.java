@@ -1,6 +1,7 @@
 package com.interactive.cueserver.cli;
 
 import com.interactive.cueserver.CueServerClient;
+import com.interactive.cueserver.cli.actions.ClearPlaybackAction;
 import com.interactive.cueserver.cli.actions.DetailedPlaybackStatusAction;
 import com.interactive.cueserver.cli.actions.DmxOutputAction;
 import com.interactive.cueserver.cli.actions.PlayCueAction;
@@ -104,6 +105,7 @@ public class CliRunner
         csActions.add(new DetailedPlaybackStatusAction(client));
         csActions.add(new DmxOutputAction(client));
         csActions.add(new PlayCueAction(client));
+        csActions.add(new ClearPlaybackAction(client));
 
         CliRunner runner = new CliRunner(csActions);
         runner.run();
