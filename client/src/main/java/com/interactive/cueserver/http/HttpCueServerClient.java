@@ -41,6 +41,12 @@ public class HttpCueServerClient implements CueServerClient
      */
     private static final int DETAILED_PLAYBACK_STATUS_ARRAY_LEN = 96;
 
+    /** The URL used to execute commands. */
+    private final String exeUrl;
+
+    /** The URL used to get values. */
+    private final String getUrl;
+
     /** The host and port of the CueServer the client is connected to. */
     private final String url;
 
@@ -90,6 +96,8 @@ public class HttpCueServerClient implements CueServerClient
         this.httpClient = checkNotNull(httpClient, "httpClient cannot be null");
 
         url = host + ":" + port;
+        getUrl = url + "/get.cgi/?req=";
+        exeUrl = url + "/exe.cgi/?cmd=";
     }
 
     /**
@@ -100,7 +108,7 @@ public class HttpCueServerClient implements CueServerClient
     {
 
         Integer[] byteArray = httpClient.submitHttpGetRequest(
-                url + "/get.cgi/?req=SI");
+                getUrl + "SI");
 
         SystemInfo info = null;
         if(byteArray == null || byteArray.length != SYSTEM_ARRAY_LEN)
@@ -146,7 +154,7 @@ public class HttpCueServerClient implements CueServerClient
     public PlaybackStatus getPlaybackStatus()
     {
         Integer[] byteArray = httpClient.submitHttpGetRequest(
-                url + "/get.cgi/?req=PS");
+                getUrl + "PS");
 
         PlaybackStatus status = null;
         if(byteArray == null ||  byteArray.length != PLAYBACK_STATUS_ARRAY_LEN)
@@ -209,7 +217,7 @@ public class HttpCueServerClient implements CueServerClient
     public DetailedPlaybackStatus getDetailedPlaybackInfo(Playback playback)
     {
         Integer[] byteArray = httpClient.submitHttpGetRequest(
-                url + "/get.cgi/?req=PI&id=" + playback.getPlaybackId());
+                getUrl + "PI&id=" + playback.getPlaybackId());
 
         DetailedPlaybackStatus status = null;
         if(byteArray == null ||
@@ -246,8 +254,7 @@ public class HttpCueServerClient implements CueServerClient
     @Override
     public Integer[] getOutputLevels()
     {
-        Integer[] byteArray = httpClient.submitHttpGetRequest(
-                url + "/get.cgi/?req=OUT");
+        Integer[] byteArray = httpClient.submitHttpGetRequest(getUrl + "OUT");
 
         Integer[] dmxValues  = null;
         if(byteArray == null || byteArray.length != 512)
@@ -260,6 +267,34 @@ public class HttpCueServerClient implements CueServerClient
             dmxValues = byteArray;
         }
         return dmxValues;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void playCue(double cueNumber)
+    {
+        playCue(cueNumber, Playback.PLAYBACK_1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void playCue(double cueNumber, Playback playback)
+    {
+        if(cueNumber <= 0)
+        {
+            LOGGER.error("cueNumber must be positive.");
+            throw new IllegalArgumentException("cueNumber must be positive");
+        }
+
+        String cmd =
+                "p+" + playback.getPlaybackId() + "+cue+" +cueNumber + "+go";
+        LOGGER.debug("Cue command: {}", cmd);
+
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
     }
 
     /**

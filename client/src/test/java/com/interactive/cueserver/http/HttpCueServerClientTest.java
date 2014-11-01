@@ -33,6 +33,9 @@ public class HttpCueServerClientTest
     /** URL for tests. */
     private final String testUrl = "http://localhost.invalid.com";
 
+    /** Comand URL. */
+    private final String cmdUrl = testUrl + ":80/exe.cgi/?cmd=";
+
     /** Mocked HTTP client. */
     private SimpleHttpClient mockedHttpClient;
 
@@ -514,6 +517,65 @@ public class HttpCueServerClientTest
     public void getDetailedPlaybackNullPlayback()
     {
         cueServerClient.getDetailedPlaybackInfo(null);
+    }
+
+    /**
+     * Test playing a cue.
+     */
+    @Test
+    public void playCue()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.playCue(1);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "1" + "+cue+" + 1.0 +
+                "+go"));
+    }
+
+    /**
+     * Test playing a cue.
+     */
+    @Test
+    public void playCuePlayback2()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.playCue(1, Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+cue+" + 1.0 +
+                "+go"));
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidCueNumber()
+    {
+        cueServerClient.playCue(0);
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void playCueInvalidCueNumber2()
+    {
+        cueServerClient.playCue(0, Playback.PLAYBACK_1);
+    }
+
+    /**
+     * A {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void playCueNullPayback()
+    {
+        cueServerClient.playCue(1, null);
     }
 
     /**
