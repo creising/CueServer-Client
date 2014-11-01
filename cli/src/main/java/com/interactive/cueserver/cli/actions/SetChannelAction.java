@@ -46,9 +46,9 @@ public class SetChannelAction implements Action
     {
         int channel = parser.readInt("Enter a channel number: ");
         int value = parser.readInt("Enter a level within [0, 255]: ");
-        int time = parser.readInt("Enter a fade time: ");
+        double time = parser.readDouble("Enter a fade time: ");
         Playback playback = parser.readPlayback(
                 "Enter the playback number [1, 4]: ");
-        client.setChannel(channel,value, time, playback);
+        client.setChannel(channel, value, time, playback);
     }
 }

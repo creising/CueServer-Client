@@ -528,10 +528,10 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.playCue(1);
+        cueServerClient.playCue(2);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
-        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "1" + "+cue+" + 1.0 +
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "1" + "+cue+" + 2.0 +
                 "+go"));
     }
 
@@ -544,11 +544,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.playCue(1, Playback.PLAYBACK_2);
+        cueServerClient.playCue(2.1, Playback.PLAYBACK_2);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
-        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+cue+" + 1.0 +
-                "+go"));
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+cue+" +
+                2.1 + "+go"));
     }
 
     /**
@@ -615,7 +615,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p1+ch+1+at+%23255+time+0"));
+                is(cmdUrl + "p1+ch+1+at+%23255+time+0.0"));
     }
 
     /**
@@ -627,11 +627,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannel(1, 255, 2);
+        cueServerClient.setChannel(1, 255, 2.11);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p1+ch+1+at+%23255+time+2"));
+                is(cmdUrl + "p1+ch+1+at+%23255+time+2.1"));
     }
 
     /**
@@ -643,11 +643,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannel(1, 255, 2, Playback.PLAYBACK_3);
+        cueServerClient.setChannel(1, 255, 2.1, Playback.PLAYBACK_3);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+1+at+%23255+time+2"));
+                is(cmdUrl + "p3+ch+1+at+%23255+time+2.1"));
     }
 
     /**
@@ -663,7 +663,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+1+at+%230+time+0"));
+                is(cmdUrl + "p3+ch+1+at+%230+time+0.0"));
     }
 
     /**
@@ -679,7 +679,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+512+at+%23255+time+1"));
+                is(cmdUrl + "p3+ch+512+at+%23255+time+1.0"));
     }
 
     /**
@@ -749,7 +749,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p1+ch+1%3E10+at%23255+time+0"));
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+0.0"));
     }
 
     /**
@@ -761,11 +761,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannelRange(1, 10, 255, 20);
+        cueServerClient.setChannelRange(1, 10, 255, 20.4);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p1+ch+1%3E10+at%23255+time+20"));
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+20.4"));
     }
 
     /**
@@ -781,7 +781,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p2+ch+1%3E10+at%230+time+20"));
+                cmdUrl + "p2+ch+1%3E10+at%230+time+20.0"));
     }
 
     /**

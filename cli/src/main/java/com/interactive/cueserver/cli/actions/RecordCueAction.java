@@ -45,8 +45,8 @@ public class RecordCueAction implements Action
     public void executeAction()
     {
         double cueNumber =  parser.readDouble("Enter cue number: ");
-        int uptime = parser.readInt("Enter an uptime: ");
-        int downtime = parser.readInt("Enter a downtime: ");
+        double uptime = parser.readDouble("Enter an uptime: ");
+        double downtime = parser.readDouble("Enter a downtime: ");
         client.recordCue(cueNumber, uptime, downtime);
     }
 }
