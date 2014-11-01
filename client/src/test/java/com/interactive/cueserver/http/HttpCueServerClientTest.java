@@ -33,7 +33,7 @@ public class HttpCueServerClientTest
     /** URL for tests. */
     private final String testUrl = "http://localhost.invalid.com";
 
-    /** Comand URL. */
+    /** Command URL. */
     private final String cmdUrl = testUrl + ":80/exe.cgi/?cmd=";
 
     /** Mocked HTTP client. */
@@ -734,6 +734,135 @@ public class HttpCueServerClientTest
     public void setChannelNullPlayback()
     {
         cueServerClient.setChannel(1, 255, 0, null);
+    }
+
+    /**
+     * Test controlling a range of channels.
+     */
+    @Test
+    public void setChannelRange()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 255);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+0"));
+    }
+
+    /**
+     * Test controlling a range of channels with a time.
+     */
+    @Test
+    public void setChannelRangeTime()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 255, 20);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+20"));
+    }
+
+    /**
+     * Test controlling a range of channels with a time and playback.
+     */
+    @Test
+    public void setChannelRangeTimePlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 0, 20, Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p2+ch+1%3E10+at%230+time+20"));
+    }
+
+    /**
+     * Test with a start channel that is too low.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinStartChan()
+    {
+        cueServerClient.setChannelRange(0, 10, 255);
+    }
+
+    /**
+     * Test with a start channel that is too high.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxStartChan()
+    {
+        cueServerClient.setChannelRange(513, 10, 255);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidRange()
+    {
+        cueServerClient.setChannelRange(10, 9, 255);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinLevel()
+    {
+        cueServerClient.setChannelRange(10, 9, -1);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxLevel()
+    {
+        cueServerClient.setChannelRange(10, 9, 256);
+    }
+
+    /**
+     * Test with an end channel that is too high.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxEndChan()
+    {
+        cueServerClient.setChannelRange(1, 513, 255);
+    }
+
+    /**
+     * Test witn an end channel that is too low.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinEndChan()
+    {
+        cueServerClient.setChannelRange(1, 0, 255);
+    }
+
+    /**
+     * Test with an invalid time.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidTime()
+    {
+        cueServerClient.setChannelRange(1, 9, 255, -1);
+    }
+
+    /**
+     * Test with a {@code null} playback.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setChannelRangeNullPlayback()
+    {
+        cueServerClient.setChannelRange(1, 9, 255, 0, null);
     }
 
     /**

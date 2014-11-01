@@ -387,7 +387,6 @@ public class HttpCueServerClient implements CueServerClient
         checkChannelLevel(value);
         checkTime(timeSeconds);
 
-        //p1 ch 2>4 at 100 time 10
         String cmd = "p" + playback.getPlaybackId() + "+ch+" + startChannel +
                 "%3E" + endChannel + "+at%23" + value + "+time+" +timeSeconds;
         LOGGER.debug("Range command: {}", cmd);
