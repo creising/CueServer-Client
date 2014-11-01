@@ -368,7 +368,6 @@ public class HttpCueServerClient implements CueServerClient
                 Playback.PLAYBACK_1);
     }
 
-    //TODO unit tests
     /**
      * {@inheritDoc}
      */
