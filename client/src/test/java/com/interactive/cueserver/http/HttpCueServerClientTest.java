@@ -603,6 +603,140 @@ public class HttpCueServerClientTest
     }
 
     /**
+     * Test setting channel and level.
+     */
+    @Test
+    public void setChannelLevel()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p1+ch+1+at+%23255+time+0"));
+    }
+
+    /**
+     * Test setting channel, level, and time.
+     */
+    @Test
+    public void setChannelLevelTime()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255, 2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p1+ch+1+at+%23255+time+2"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback.
+     */
+    @Test
+    public void setChannelLevelTimePlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255, 2, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+1+at+%23255+time+2"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback valid min values.
+     */
+    @Test
+    public void setChannelLevelValidMinValues()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 0, 0, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+1+at+%230+time+0"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback valid max values.
+     */
+    @Test
+    public void setChannelLevelValidMaxValues()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(512, 255, 1, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+512+at+%23255+time+1"));
+    }
+
+    /**
+     * Invalid min channel value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelMinValueInvalid()
+    {
+        cueServerClient.setChannel(0, 255);
+    }
+
+    /**
+     * Invalid max channel value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelMaxValueInvalid()
+    {
+        cueServerClient.setChannel(513, 255);
+    }
+
+    /**
+     * Invalid min level value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelLevelMinValueInvalid()
+    {
+        cueServerClient.setChannel(1, -1);
+    }
+
+    /**
+     * Invalid max level value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelLevelMaxValueInvalid()
+    {
+        cueServerClient.setChannel(1, 256);
+    }
+
+    /**
+     * Invalid min time value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelTimeMaxValueInvalid()
+    {
+        cueServerClient.setChannel(1, 255, -1);
+    }
+
+    /**
+     * {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setChannelNullPlayback()
+    {
+        cueServerClient.setChannel(1, 255, 0, null);
+    }
+
+    /**
      * Convert merge mode.
      */
     @Test

@@ -310,6 +310,138 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannel(int channel, int value)
+    {
+        setChannel(channel, value, 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannel(int channel, int value, int timeSeconds)
+    {
+        setChannel(channel, value, timeSeconds, Playback.PLAYBACK_1);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannel(int channel,
+                           int value,
+                           int timeSeconds,
+                           Playback playback)
+    {
+        checkChannel(channel);
+        checkChannelLevel(value);
+        checkTime(timeSeconds);
+
+        String cmd = "p" + playback.getPlaybackId() + "+ch+" + channel +
+                "+at+%23" + value + "+time+" + timeSeconds;
+
+        String fullUrl = exeUrl + cmd;
+        LOGGER.debug("Channel command: {}", fullUrl);
+        httpClient.submitHttpGetRequest(fullUrl);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannelRange(int startChannel, int endChannel, int value)
+    {
+        setChannelRange(startChannel, endChannel, value, 0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannelRange(int startChannel, int endChannel, int value,
+                                int timeSeconds)
+    {
+        setChannelRange(startChannel, endChannel, value, timeSeconds,
+                Playback.PLAYBACK_1);
+    }
+
+    //TODO unit tests
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setChannelRange(int startChannel, int endChannel, int value,
+                                int timeSeconds, Playback playback)
+    {
+        checkChannel(startChannel);
+        checkChannel(endChannel);
+        if(endChannel < startChannel)
+        {
+            LOGGER.error("end channel cannot be < start channel");
+            throw new IllegalArgumentException("end channel cannot be < " +
+                    "than the start channel");
+        }
+        checkChannelLevel(value);
+        checkTime(timeSeconds);
+
+        //p1 ch 2>4 at 100 time 10
+        String cmd = "p" + playback.getPlaybackId() + "+ch+" + startChannel +
+                "%3E" + endChannel + "+at%23" + value + "+time+" +timeSeconds;
+        LOGGER.debug("Range command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * Checks to make the provided DMX channel is valid.
+     *
+     * @param channel the channel to check.
+     * @throws IllegalArgumentException if the channel is not valid.
+     */
+    private void checkChannel(int channel)
+    {
+        if(channel < 1 || channel > 512)
+        {
+            LOGGER.error("channel must be within [1, 512]. Given: {}", channel);
+            throw new IllegalArgumentException(
+                    "channel must be within [1, 512]");
+        }
+    }
+
+    /**
+     * Checks to make the provided DMX channel level is valid.
+     *
+     * @param value the value to check.
+     * @throws IllegalArgumentException if the value is not valid.
+     */
+    private void checkChannelLevel(int value)
+    {
+        if(value < 0 || value > 255)
+        {
+            LOGGER.error("value must be within [0, 255]. Given: {}", value);
+            throw new IllegalArgumentException(
+                    "value must be within [0, 255].");
+        }
+    }
+
+    /**
+     * Checked to make the time is valid.
+     *
+     * @param timeSeconds the time to check.
+     * @throws IllegalArgumentException if the time is not valid.
+     */
+    private void checkTime(int timeSeconds)
+    {
+        if(timeSeconds < 0)
+        {
+            LOGGER.error("time must be >= 0. Given {}.", timeSeconds);
+            throw new IllegalArgumentException("time must be positive.");
+        }
+    }
+
+    /**
      * Gets the URL of the CueServer.
      * @return Never {@code null}.
      */
