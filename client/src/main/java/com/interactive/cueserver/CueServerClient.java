@@ -154,4 +154,31 @@ public interface CueServerClient
     void setChannelRange(int startChannel, int endChannel, int value,
                          int timeSeconds, Playback playback);
 
+    /**
+     * Records a cue.
+     *
+     * @param cueNumber the cue number to record.
+     * @param uptimeSecs the fade's uptime in seconds.
+     * @param downtimeSecs the fade's downtime in seconds.
+     * @throws IllegalArgumentException if {@code cueNumber} is not positive, or
+     *                                  if {@code fadeTimeSeconds} is negative.
+     */
+    void recordCue(double cueNumber, int uptimeSecs, int downtimeSecs);
+
+    /**
+     * Deletes a cue.
+     *
+     * @param cueNumber the cue number to delete.
+     * @throws IllegalArgumentException if {@code cueNumber} is not positive.
+     */
+    void deleteCue(double cueNumber);
+
+    /**
+     * Updates a cue.
+     *
+     * @param cueNumber the cue number to delete.
+     * @throws IllegalArgumentException if {@code cueNumber} is not positive.
+     */
+    void updateCue(double cueNumber);
+
 }

@@ -25,6 +25,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class HttpCueServerClient implements CueServerClient
 {
+    // TODO need to update script commands to use suggested abbreviations
+    // TODO setting a channel with a time does not appear to work after recording cues
+    // TODO need to confirm allowed upper bounds for time and cue number
+
     /** For logging. */
     private static final Logger LOGGER =
             LoggerFactory.getLogger(HttpCueServerClient.class);
@@ -390,6 +394,61 @@ public class HttpCueServerClient implements CueServerClient
                 "%3E" + endChannel + "+at%23" + value + "+time+" +timeSeconds;
         LOGGER.debug("Range command: {}", cmd);
         httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void recordCue(double cueNumber, int uptimeSecs, int downtimeSecs)
+    {
+        checkCueNumber(cueNumber);
+        checkTime(uptimeSecs);
+        checkTime(downtimeSecs);
+
+        String cmd = "FA+" + uptimeSecs + "%2F" + downtimeSecs + "%3B" + "RQ+"
+                + cueNumber;
+        LOGGER.debug("Rec cue command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteCue(double cueNumber)
+    {
+        checkCueNumber(cueNumber);
+        String cmd = "DELQ+" + cueNumber;
+        LOGGER.debug("Delete command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateCue(double cueNumber)
+    {
+        checkCueNumber(cueNumber);
+        String cmd = "UQ+" + cueNumber;
+        LOGGER.debug("Delete command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * Checks to make the provided cue number is valid.
+     *
+     * @param cueNumber the channel to check.
+     * @throws IllegalArgumentException if the number is not valid.
+     */
+    private void checkCueNumber(double cueNumber)
+    {
+        if(cueNumber <= 0)
+        {
+            LOGGER.error("cueNumber must be positive.");
+            throw new IllegalArgumentException("cueNumber must be positive");
+        }
     }
 
     /**
