@@ -45,10 +45,13 @@ tasks.withType(FindBugs) {
 }
 
 findbugs {
-    ignoreFailures = true
     sourceSets = [sourceSets.main]
-    reportsDir = file("$project.buildDir/reports/findbugs")
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/findbugsReports")
     effort = "max"
+    reportLevel = "low"
+    visitors = ["FindSqlInjection", "SwitchFallthrough"]
+    omitVisitors = ["FindNonShortCircuit"]
 }
 
 compileJava {

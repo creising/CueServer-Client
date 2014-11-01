@@ -7,13 +7,13 @@ import com.interactive.cueserver.data.playback.Playback;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Example for retrieving the playback status from a CueServer.
+ * Example for clearing a playback
  * <p>
  * author: Chris Reising
  */
-public class DetailedPlaybackStatusAction implements Action
+public class ClearPlaybackAction implements Action
 {
-    /** Client to retrieve data from. */
+    /** CueServer client */
     private final CueServerClient client;
 
     /** For reading input from the user. */
@@ -24,7 +24,7 @@ public class DetailedPlaybackStatusAction implements Action
      *
      * @param client client to retrieve from.
      */
-    public DetailedPlaybackStatusAction(CueServerClient client)
+    public ClearPlaybackAction(CueServerClient client)
     {
         this.client = checkNotNull(client, "client cannot be null.");
     }
@@ -35,7 +35,7 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public String getDescription()
     {
-        return "Retrieve the detailed playback status from the CueServer";
+        return "Clear a playback";
     }
 
     /**
@@ -44,8 +44,8 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public void executeAction()
     {
-        Playback playback = parser.readPlayback("Enter playback number" +
-                "(1-4): ");
-        System.out.println(client.getDetailedPlaybackInfo(playback));
+        Playback playback = parser.readPlayback("Enter the playback to " +
+                "clear:  ");
+        client.clearPlayback(playback);
     }
 }

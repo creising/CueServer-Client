@@ -7,13 +7,13 @@ import com.interactive.cueserver.data.playback.Playback;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Example for retrieving the playback status from a CueServer.
+ * Example for setting a level for a range of channels.
  * <p>
  * author: Chris Reising
  */
-public class DetailedPlaybackStatusAction implements Action
+public class SetChannelRangeAction implements Action
 {
-    /** Client to retrieve data from. */
+    /** Client to fire cue */
     private final CueServerClient client;
 
     /** For reading input from the user. */
@@ -24,7 +24,7 @@ public class DetailedPlaybackStatusAction implements Action
      *
      * @param client client to retrieve from.
      */
-    public DetailedPlaybackStatusAction(CueServerClient client)
+    public SetChannelRangeAction(CueServerClient client)
     {
         this.client = checkNotNull(client, "client cannot be null.");
     }
@@ -35,7 +35,7 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public String getDescription()
     {
-        return "Retrieve the detailed playback status from the CueServer";
+        return "Set the level for a range of channels";
     }
 
     /**
@@ -44,8 +44,12 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public void executeAction()
     {
-        Playback playback = parser.readPlayback("Enter playback number" +
-                "(1-4): ");
-        System.out.println(client.getDetailedPlaybackInfo(playback));
+        int startCh = parser.readInt("Enter the start channel number: ");
+        int endCh = parser.readInt("Enter the end channel number: ");
+        int value = parser.readInt("Enter a level within [0, 255]: ");
+        int time = parser.readInt("Enter a fade time: ");
+        Playback playback = parser.readPlayback(
+                "Enter the playback number [1, 4]: ");
+        client.setChannelRange(startCh, endCh, value, time, playback);
     }
 }

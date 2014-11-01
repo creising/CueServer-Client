@@ -7,13 +7,13 @@ import com.interactive.cueserver.data.playback.Playback;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Example for retrieving the playback status from a CueServer.
+ * Example for setting the level of a channel.
  * <p>
  * author: Chris Reising
  */
-public class DetailedPlaybackStatusAction implements Action
+public class SetChannelAction implements Action
 {
-    /** Client to retrieve data from. */
+    /** Client to fire cue */
     private final CueServerClient client;
 
     /** For reading input from the user. */
@@ -24,7 +24,7 @@ public class DetailedPlaybackStatusAction implements Action
      *
      * @param client client to retrieve from.
      */
-    public DetailedPlaybackStatusAction(CueServerClient client)
+    public SetChannelAction(CueServerClient client)
     {
         this.client = checkNotNull(client, "client cannot be null.");
     }
@@ -35,7 +35,7 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public String getDescription()
     {
-        return "Retrieve the detailed playback status from the CueServer";
+        return "Set the level of a channel";
     }
 
     /**
@@ -44,8 +44,11 @@ public class DetailedPlaybackStatusAction implements Action
     @Override
     public void executeAction()
     {
-        Playback playback = parser.readPlayback("Enter playback number" +
-                "(1-4): ");
-        System.out.println(client.getDetailedPlaybackInfo(playback));
+        int channel = parser.readInt("Enter a channel number: ");
+        int value = parser.readInt("Enter a level within [0, 255]: ");
+        int time = parser.readInt("Enter a fade time: ");
+        Playback playback = parser.readPlayback(
+                "Enter the playback number [1, 4]: ");
+        client.setChannel(channel,value, time, playback);
     }
 }

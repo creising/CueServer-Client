@@ -33,6 +33,9 @@ public class HttpCueServerClientTest
     /** URL for tests. */
     private final String testUrl = "http://localhost.invalid.com";
 
+    /** Command URL. */
+    private final String cmdUrl = testUrl + ":80/exe.cgi/?cmd=";
+
     /** Mocked HTTP client. */
     private SimpleHttpClient mockedHttpClient;
 
@@ -514,6 +517,352 @@ public class HttpCueServerClientTest
     public void getDetailedPlaybackNullPlayback()
     {
         cueServerClient.getDetailedPlaybackInfo(null);
+    }
+
+    /**
+     * Test playing a cue.
+     */
+    @Test
+    public void playCue()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.playCue(1);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "1" + "+cue+" + 1.0 +
+                "+go"));
+    }
+
+    /**
+     * Test playing a cue.
+     */
+    @Test
+    public void playCuePlayback2()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.playCue(1, Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+cue+" + 1.0 +
+                "+go"));
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidCueNumber()
+    {
+        cueServerClient.playCue(0);
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void playCueInvalidCueNumber2()
+    {
+        cueServerClient.playCue(0, Playback.PLAYBACK_1);
+    }
+
+    /**
+     * A {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void playCueNullPayback()
+    {
+        cueServerClient.playCue(1, null);
+    }
+
+    /**
+     * Test clearing a playback.
+     */
+    @Test
+    public void clearPlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.clearPlayback(Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+clear"));
+    }
+
+    /**
+     * A {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void clearPlaybackNullInput()
+    {
+        cueServerClient.clearPlayback(null);
+    }
+
+    /**
+     * Test setting channel and level.
+     */
+    @Test
+    public void setChannelLevel()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p1+ch+1+at+%23255+time+0"));
+    }
+
+    /**
+     * Test setting channel, level, and time.
+     */
+    @Test
+    public void setChannelLevelTime()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255, 2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p1+ch+1+at+%23255+time+2"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback.
+     */
+    @Test
+    public void setChannelLevelTimePlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 255, 2, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+1+at+%23255+time+2"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback valid min values.
+     */
+    @Test
+    public void setChannelLevelValidMinValues()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(1, 0, 0, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+1+at+%230+time+0"));
+    }
+
+    /**
+     * Test setting channel, level, time and playback valid max values.
+     */
+    @Test
+    public void setChannelLevelValidMaxValues()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannel(512, 255, 1, Playback.PLAYBACK_3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(),
+                is(cmdUrl + "p3+ch+512+at+%23255+time+1"));
+    }
+
+    /**
+     * Invalid min channel value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelMinValueInvalid()
+    {
+        cueServerClient.setChannel(0, 255);
+    }
+
+    /**
+     * Invalid max channel value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelMaxValueInvalid()
+    {
+        cueServerClient.setChannel(513, 255);
+    }
+
+    /**
+     * Invalid min level value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelLevelMinValueInvalid()
+    {
+        cueServerClient.setChannel(1, -1);
+    }
+
+    /**
+     * Invalid max level value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelLevelMaxValueInvalid()
+    {
+        cueServerClient.setChannel(1, 256);
+    }
+
+    /**
+     * Invalid min time value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelTimeMaxValueInvalid()
+    {
+        cueServerClient.setChannel(1, 255, -1);
+    }
+
+    /**
+     * {@code null} playback will cause an exception.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setChannelNullPlayback()
+    {
+        cueServerClient.setChannel(1, 255, 0, null);
+    }
+
+    /**
+     * Test controlling a range of channels.
+     */
+    @Test
+    public void setChannelRange()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 255);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+0"));
+    }
+
+    /**
+     * Test controlling a range of channels with a time.
+     */
+    @Test
+    public void setChannelRangeTime()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 255, 20);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p1+ch+1%3E10+at%23255+time+20"));
+    }
+
+    /**
+     * Test controlling a range of channels with a time and playback.
+     */
+    @Test
+    public void setChannelRangeTimePlayback()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.setChannelRange(1, 10, 0, 20, Playback.PLAYBACK_2);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "p2+ch+1%3E10+at%230+time+20"));
+    }
+
+    /**
+     * Test with a start channel that is too low.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinStartChan()
+    {
+        cueServerClient.setChannelRange(0, 10, 255);
+    }
+
+    /**
+     * Test with a start channel that is too high.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxStartChan()
+    {
+        cueServerClient.setChannelRange(513, 10, 255);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidRange()
+    {
+        cueServerClient.setChannelRange(10, 9, 255);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinLevel()
+    {
+        cueServerClient.setChannelRange(10, 9, -1);
+    }
+
+    /**
+     * Test a end channel that is greater than the start channel.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxLevel()
+    {
+        cueServerClient.setChannelRange(10, 9, 256);
+    }
+
+    /**
+     * Test with an end channel that is too high.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxEndChan()
+    {
+        cueServerClient.setChannelRange(1, 513, 255);
+    }
+
+    /**
+     * Test witn an end channel that is too low.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMinEndChan()
+    {
+        cueServerClient.setChannelRange(1, 0, 255);
+    }
+
+    /**
+     * Test with an invalid time.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidTime()
+    {
+        cueServerClient.setChannelRange(1, 9, 255, -1);
+    }
+
+    /**
+     * Test with a {@code null} playback.
+     */
+    @Test(expected = NullPointerException.class)
+    public void setChannelRangeNullPlayback()
+    {
+        cueServerClient.setChannelRange(1, 9, 255, 0, null);
     }
 
     /**
