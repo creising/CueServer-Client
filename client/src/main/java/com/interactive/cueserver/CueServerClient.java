@@ -51,7 +51,9 @@ public interface CueServerClient
     /**
      * Executes the given cue number on {@link Playback#PLAYBACK_1}.
      *
-     * @param cueNumber the cue number to execute.
+     * @param cueNumber The cue number to execute. The CueServer only support up
+     *                  to one decimal place for cue number (e.g., 10.1). Any
+     *                  values greater than one decimal place will be truncated
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
      */
     void playCue(double cueNumber);
@@ -59,7 +61,9 @@ public interface CueServerClient
     /**
      * Executes the given cue number on the given playback.
      *
-     * @param cueNumber the cue number to execute.
+     * @param cueNumber The cue number to execute. The CueServer only support up
+     *                  to one decimal place for cue number (e.g., 10.1). Any
+     *                  values greater than one decimal place will be truncated
      * @param playback the playback to execute the cue on.
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
      * @throws NullPointerException if {@code playback} is {@code null}.
@@ -89,10 +93,11 @@ public interface CueServerClient
      * @param channel The channel to set. Must be within [1, 512].
      * @param value The value. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
-     *                    transition. Must be positive.
+     *                    transition. Must be within [0, 65000]. The precision
+     *                    is up to a tenth of a second.
      * @throws IllegalArgumentException if any argument is out of bounds.
      */
-    void setChannel(int channel, int value, int timeSeconds);
+    void setChannel(int channel, int value, double timeSeconds);
 
     /**
      * Sets the given channel to a level on the provided playback and using the
@@ -101,12 +106,14 @@ public interface CueServerClient
      * @param channel The channel to set. Must be within [1, 512].
      * @param value The value. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
-     *                    transition. Must &ge; 0.
+     *                    transition. Must be within [0, 65000]. The precision
+     *                    is up to a tenth of a second.
      * @param playback the playback controlling the channel.
      * @throws IllegalArgumentException if any argument is out of its bounds.
      * @throws NullPointerException if {@code playback} is {@code null}.
      */
-    void setChannel(int channel, int value, int timeSeconds, Playback playback);
+    void setChannel(int channel, int value, double timeSeconds,
+                    Playback playback);
 
     /**
      * Sets the range of channels to a level on playback 1 using a time of 0.
@@ -121,37 +128,73 @@ public interface CueServerClient
     void setChannelRange(int startChannel, int endChannel, int value);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provied
+     * Sets the range of channels to a level on playback 1 using the provided
      * time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
      * @param endChannel The end of the range. Must be within [1, 512].
      * @param value The value to set the channel to. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
-     *                    transition. Must &ge; 0.
+     *                    transition. Must be within [0, 65000].
      * @throws IllegalArgumentException if the end if greater than the start
      *                                  range, or if any value is outside of its
      *                                  bounds.
      */
     void setChannelRange(int startChannel, int endChannel, int value,
-                         int timeSeconds);
+                         double timeSeconds);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provied
+     * Sets the range of channels to a level on playback 1 using the provided
      * time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
      * @param endChannel The end of the range. Must be within [1, 512].
      * @param value The value to set the channel to. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
-     *                    transition. Must &ge; 0.
-     @param playback the playback controlling the channel.
+     *                    transition. Must be within [0, 65000]. The precision
+     *                    is up to a tenth of a second.
+     *@param playback the playback controlling the channel.
      * @throws IllegalArgumentException if the end if greater than the start
      *                                  range, or if any value is outside of its
      *                                  bounds.
      * @throws NullPointerException if {@code playback} is {@code null}
      */
     void setChannelRange(int startChannel, int endChannel, int value,
-                         int timeSeconds, Playback playback);
+                         double timeSeconds, Playback playback);
+
+    /**
+     * Records a cue.
+     *
+     * @param cueNumber the cue number to record. Must be positive. The
+     *                  CueServer only supports up to one decimal place for cue
+     *                  number (e.g., 10.1). The value passed in will be
+     *                  truncated to accommodate this.
+     * @param uptimeSecs the fade's uptime in seconds. Must be within [0, 65000]
+     * @param downtimeSecs the fade's downtime in seconds. Must be within
+     *                     [0, 65000]. The precision is up to a tenth of a
+     *                     second.
+     * @throws IllegalArgumentException if any argument is out of bounds.
+     */
+    void recordCue(double cueNumber, double uptimeSecs, double downtimeSecs);
+
+    /**
+     * Deletes a cue.
+     *
+     * @param cueNumber the cue number to delete. The CueServer only supports up
+     *                  to one decimal place for cue number (e.g., 10.1). The
+     *                  value passed in will be truncated to accommodate this.
+     * @throws IllegalArgumentException if {@code cueNumber} is not positive.
+     */
+    void deleteCue(double cueNumber);
+
+    /**
+     * Updates a cue.
+     *
+     * @param cueNumber the cue number to delete. The CueServer only supports up
+     *                  to one decimal place for cue number (e.g., 10.1). The
+     *                  value passed in will be truncated to accommodate this.
+     * @throws IllegalArgumentException if {@code cueNumber} is not positive.
+     */
+    void updateCue(double cueNumber);
 
 }

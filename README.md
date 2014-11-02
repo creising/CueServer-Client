@@ -25,4 +25,7 @@ The client library currently supports the following operations:
 - Clear a playback
 - Set a channel
 - Set a range of channels
+- Record a cue
+- Update a cue
+- Delete a cue
 

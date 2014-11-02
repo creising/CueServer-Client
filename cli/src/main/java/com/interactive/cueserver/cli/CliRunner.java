@@ -2,12 +2,15 @@ package com.interactive.cueserver.cli;
 
 import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.cli.actions.ClearPlaybackAction;
+import com.interactive.cueserver.cli.actions.DeleteCueAction;
 import com.interactive.cueserver.cli.actions.DetailedPlaybackStatusAction;
 import com.interactive.cueserver.cli.actions.DmxOutputAction;
 import com.interactive.cueserver.cli.actions.PlayCueAction;
 import com.interactive.cueserver.cli.actions.PlaybackStatusAction;
+import com.interactive.cueserver.cli.actions.RecordCueAction;
 import com.interactive.cueserver.cli.actions.SetChannelAction;
 import com.interactive.cueserver.cli.actions.SetChannelRangeAction;
+import com.interactive.cueserver.cli.actions.UpdateCueAction;
 import com.interactive.cueserver.http.HttpCueServerClient;
 import com.interactive.cueserver.cli.actions.Action;
 import com.interactive.cueserver.cli.actions.SystemInfoAction;
@@ -110,6 +113,9 @@ public class CliRunner
         csActions.add(new ClearPlaybackAction(client));
         csActions.add(new SetChannelAction(client));
         csActions.add(new SetChannelRangeAction(client));
+        csActions.add(new RecordCueAction(client));
+        csActions.add(new UpdateCueAction(client));
+        csActions.add(new DeleteCueAction(client));
 
         CliRunner runner = new CliRunner(csActions);
         runner.run();

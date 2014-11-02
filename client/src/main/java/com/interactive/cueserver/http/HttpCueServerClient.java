@@ -87,8 +87,8 @@ public class HttpCueServerClient implements CueServerClient
      * or if the port is not valid.
      */
     public HttpCueServerClient(String host,
-                            int port,
-                            SimpleHttpClient httpClient)
+                                int port,
+                                SimpleHttpClient httpClient)
     {
         checkNotNull(host, "host cannot be null");
         checkArgument(port >= 0 && port <= 65535, "port is not valid");
@@ -291,7 +291,8 @@ public class HttpCueServerClient implements CueServerClient
         }
 
         String cmd =
-                "p+" + playback.getPlaybackId() + "+cue+" +cueNumber + "+go";
+                "P+" + playback.getPlaybackId() + "+Q+" +
+                        truncateValue(cueNumber) + "+GO";
         LOGGER.debug("Cue command: {}", cmd);
 
         httpClient.submitHttpGetRequest(exeUrl + cmd);
@@ -303,7 +304,7 @@ public class HttpCueServerClient implements CueServerClient
     @Override
     public void clearPlayback(Playback playback)
     {
-        String cmd = "p+" + playback.getPlaybackId() + "+clear";
+        String cmd = "P+" + playback.getPlaybackId() + "+CL";
         LOGGER.debug("Cue command: {}", cmd);
 
         httpClient.submitHttpGetRequest(exeUrl + cmd);
@@ -322,7 +323,7 @@ public class HttpCueServerClient implements CueServerClient
      * {@inheritDoc}
      */
     @Override
-    public void setChannel(int channel, int value, int timeSeconds)
+    public void setChannel(int channel, int value, double timeSeconds)
     {
         setChannel(channel, value, timeSeconds, Playback.PLAYBACK_1);
     }
@@ -333,18 +334,18 @@ public class HttpCueServerClient implements CueServerClient
     @Override
     public void setChannel(int channel,
                            int value,
-                           int timeSeconds,
+                           double timeSeconds,
                            Playback playback)
     {
         checkChannel(channel);
         checkChannelLevel(value);
         checkTime(timeSeconds);
-
-        String cmd = "p" + playback.getPlaybackId() + "+ch+" + channel +
-                "+at+%23" + value + "+time+" + timeSeconds;
+        //ex: T 3 P1 C 1 A 50
+        String cmd = "T+" + truncateValue(timeSeconds) + "+P" +
+                playback.getPlaybackId() + "+C+" + channel + "+A+%23" + value;
 
         String fullUrl = exeUrl + cmd;
-        LOGGER.debug("Channel command: {}", fullUrl);
+        LOGGER.info("Channel command: {}", fullUrl);
         httpClient.submitHttpGetRequest(fullUrl);
     }
 
@@ -362,7 +363,7 @@ public class HttpCueServerClient implements CueServerClient
      */
     @Override
     public void setChannelRange(int startChannel, int endChannel, int value,
-                                int timeSeconds)
+                                double timeSeconds)
     {
         setChannelRange(startChannel, endChannel, value, timeSeconds,
                 Playback.PLAYBACK_1);
@@ -373,7 +374,7 @@ public class HttpCueServerClient implements CueServerClient
      */
     @Override
     public void setChannelRange(int startChannel, int endChannel, int value,
-                                int timeSeconds, Playback playback)
+                                double timeSeconds, Playback playback)
     {
         checkChannel(startChannel);
         checkChannel(endChannel);
@@ -386,10 +387,69 @@ public class HttpCueServerClient implements CueServerClient
         checkChannelLevel(value);
         checkTime(timeSeconds);
 
-        String cmd = "p" + playback.getPlaybackId() + "+ch+" + startChannel +
-                "%3E" + endChannel + "+at%23" + value + "+time+" +timeSeconds;
+        String cmd = "T+" + truncateValue(timeSeconds) + "+P" +
+                playback.getPlaybackId() + "+C+" + startChannel +
+                "%3E" + endChannel + "+A%23" + value;
         LOGGER.debug("Range command: {}", cmd);
         httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void recordCue(double cueNumber,
+                          double uptimeSecs,
+                          double downtimeSecs)
+    {
+        checkCueNumber(cueNumber);
+        checkTime(uptimeSecs);
+        checkTime(downtimeSecs);
+
+        String cmd = "FA+" + truncateValue(uptimeSecs) + "%2F" +
+                truncateValue(downtimeSecs) + "%3B" + "RQ+" +
+                truncateValue(cueNumber);
+        LOGGER.debug("Rec cue command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteCue(double cueNumber)
+    {
+        checkCueNumber(cueNumber);
+        String cmd = "DELQ+" + truncateValue(cueNumber);
+        LOGGER.debug("Delete command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateCue(double cueNumber)
+    {
+        checkCueNumber(cueNumber);
+        String cmd = "UQ+" + truncateValue(cueNumber);
+        LOGGER.debug("Delete command: {}", cmd);
+        httpClient.submitHttpGetRequest(exeUrl + cmd);
+    }
+
+    /**
+     * Checks to make the provided cue number is valid.
+     *
+     * @param cueNumber the channel to check.
+     * @throws IllegalArgumentException if the number is not valid.
+     */
+    private void checkCueNumber(double cueNumber)
+    {
+        if(cueNumber <= 0)
+        {
+            LOGGER.error("cueNumber must be positive.");
+            throw new IllegalArgumentException("cueNumber must be positive");
+        }
     }
 
     /**
@@ -425,16 +485,30 @@ public class HttpCueServerClient implements CueServerClient
     }
 
     /**
+     * Creates a string from the given double. The CueServer only supports up
+     * to one decimal place of precision. Any other reaming values will be
+     * truncated.
+     *
+     * @param time the time to format.
+     * @return Never {@code null}.
+     */
+    private String truncateValue(double time)
+    {
+        return String.format("%.1f", time);
+    }
+
+    /**
      * Checked to make the time is valid.
      *
      * @param timeSeconds the time to check.
      * @throws IllegalArgumentException if the time is not valid.
      */
-    private void checkTime(int timeSeconds)
+    private void checkTime(double timeSeconds)
     {
-        if(timeSeconds < 0)
+        if(timeSeconds < 0 || timeSeconds > 65000)
         {
-            LOGGER.error("time must be >= 0. Given {}.", timeSeconds);
+            LOGGER.error("time must be >= 0 and <= 65000. Given {}.",
+                    timeSeconds);
             throw new IllegalArgumentException("time must be positive.");
         }
     }

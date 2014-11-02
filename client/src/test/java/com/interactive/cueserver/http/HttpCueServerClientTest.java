@@ -528,11 +528,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.playCue(1);
+        cueServerClient.playCue(2);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
-        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "1" + "+cue+" + 1.0 +
-                "+go"));
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "P+"+ "1" + "+Q+" + 2.0 +
+                "+GO"));
     }
 
     /**
@@ -544,11 +544,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.playCue(1, Playback.PLAYBACK_2);
+        cueServerClient.playCue(2.1, Playback.PLAYBACK_2);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
-        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+cue+" + 1.0 +
-                "+go"));
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "P+"+ "2" + "+Q+" +
+                2.1 + "+GO"));
     }
 
     /**
@@ -590,7 +590,7 @@ public class HttpCueServerClientTest
         cueServerClient.clearPlayback(Playback.PLAYBACK_2);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
-        assertThat(urlCaptor.getValue(), is(cmdUrl + "p+"+ "2" + "+clear"));
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "P+"+ "2" + "+CL"));
     }
 
     /**
@@ -615,7 +615,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p1+ch+1+at+%23255+time+0"));
+                is(cmdUrl + "T+0.0+P1+C+1+A+%23255"));
     }
 
     /**
@@ -627,11 +627,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannel(1, 255, 2);
+        cueServerClient.setChannel(1, 255, 2.11);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p1+ch+1+at+%23255+time+2"));
+                is(cmdUrl + "T+2.1+P1+C+1+A+%23255"));
     }
 
     /**
@@ -643,11 +643,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannel(1, 255, 2, Playback.PLAYBACK_3);
+        cueServerClient.setChannel(1, 255, 2.1, Playback.PLAYBACK_3);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+1+at+%23255+time+2"));
+                is(cmdUrl + "T+2.1+P3+C+1+A+%23255"));
     }
 
     /**
@@ -663,7 +663,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+1+at+%230+time+0"));
+                is(cmdUrl + "T+0.0+P3+C+1+A+%230"));
     }
 
     /**
@@ -679,7 +679,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(),
-                is(cmdUrl + "p3+ch+512+at+%23255+time+1"));
+                is(cmdUrl + "T+1.0+P3+C+512+A+%23255"));
     }
 
     /**
@@ -722,9 +722,18 @@ public class HttpCueServerClientTest
      * Invalid min time value will cause an exception.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void setChannelTimeMaxValueInvalid()
+    public void setChannelTimeMinValueInvalid()
     {
         cueServerClient.setChannel(1, 255, -1);
+    }
+
+    /**
+     * Invalid max time value will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelTimeMazValueInvalid()
+    {
+        cueServerClient.setChannel(1, 255, 650001);
     }
 
     /**
@@ -749,7 +758,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p1+ch+1%3E10+at%23255+time+0"));
+                cmdUrl + "T+0.0+P1+C+1%3E10+A%23255"));
     }
 
     /**
@@ -761,11 +770,11 @@ public class HttpCueServerClientTest
         ArgumentCaptor<String> urlCaptor =
                 ArgumentCaptor.forClass(String.class);
 
-        cueServerClient.setChannelRange(1, 10, 255, 20);
+        cueServerClient.setChannelRange(1, 10, 255, 20.4);
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p1+ch+1%3E10+at%23255+time+20"));
+                cmdUrl + "T+20.4+P1+C+1%3E10+A%23255"));
     }
 
     /**
@@ -781,7 +790,7 @@ public class HttpCueServerClientTest
 
         verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
         assertThat(urlCaptor.getValue(), is(
-                cmdUrl + "p2+ch+1%3E10+at%230+time+20"));
+                cmdUrl + "T+20.0+P2+C+1%3E10+A%230"));
     }
 
     /**
@@ -812,12 +821,12 @@ public class HttpCueServerClientTest
     }
 
     /**
-     * Test a end channel that is greater than the start channel.
+     * Test invalid min channel level.
      */
     @Test(expected = IllegalArgumentException.class)
     public void setChannelRangeInvalidMinLevel()
     {
-        cueServerClient.setChannelRange(10, 9, -1);
+        cueServerClient.setChannelRange(9, 10, -1);
     }
 
     /**
@@ -839,7 +848,7 @@ public class HttpCueServerClientTest
     }
 
     /**
-     * Test witn an end channel that is too low.
+     * Test with an end channel that is too low.
      */
     @Test(expected = IllegalArgumentException.class)
     public void setChannelRangeInvalidMinEndChan()
@@ -851,9 +860,18 @@ public class HttpCueServerClientTest
      * Test with an invalid time.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void setChannelRangeInvalidTime()
+    public void setChannelRangeInvalidMinTime()
     {
         cueServerClient.setChannelRange(1, 9, 255, -1);
+    }
+
+    /**
+     * Test with an invalid time.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void setChannelRangeInvalidMaxTime()
+    {
+        cueServerClient.setChannelRange(1, 9, 255, 65001);
     }
 
     /**
@@ -863,6 +881,115 @@ public class HttpCueServerClientTest
     public void setChannelRangeNullPlayback()
     {
         cueServerClient.setChannelRange(1, 9, 255, 0, null);
+    }
+
+    /**
+     * Test recording a cue.
+     */
+    @Test
+    public void recordCue()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.recordCue(1, 2, 3);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(
+                cmdUrl + "FA+2.0%2F3.0%3BRQ+1.0"));
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void recordCueInvalidCueNumber()
+    {
+        cueServerClient.recordCue(0, 1, 2);
+    }
+
+    /**
+     * An invalid uptime will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void recordCueUptimeTooLow()
+    {
+        cueServerClient.recordCue(1, -1, 2);
+    }
+
+    /**
+     * An invalid uptime will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void recordCueUptimeTooHigh()
+    {
+        cueServerClient.recordCue(1, 65001, 2);
+    }
+
+    /**
+     * An invalid downtime will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void recordCueDowntimeTooLow()
+    {
+        cueServerClient.recordCue(1, 1, -1);
+    }
+
+    /**
+     * An invalid downtime will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void recordCueDowntimeTooHigh()
+    {
+        cueServerClient.recordCue(1, 1, 65001);
+    }
+
+    /**
+     * Test deleting a cue.
+     */
+    @Test
+    public void deleteCue()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.deleteCue(1);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl +"DELQ+1.0"));
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteCueInvalidCueNumber()
+    {
+        cueServerClient.deleteCue(0);
+    }
+
+    /**
+     * Test update a cue.
+     */
+    @Test
+    public void updateCue()
+    {
+        ArgumentCaptor<String> urlCaptor =
+                ArgumentCaptor.forClass(String.class);
+
+        cueServerClient.updateCue(1);
+
+        verify(mockedHttpClient).submitHttpGetRequest(urlCaptor.capture());
+        assertThat(urlCaptor.getValue(), is(cmdUrl + "UQ+1.0"));
+    }
+
+    /**
+     * An invalid cue number will cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void updateCueInvalidCueNumber()
+    {
+        cueServerClient.updateCue(0);
     }
 
     /**

@@ -47,7 +47,7 @@ public class SetChannelRangeAction implements Action
         int startCh = parser.readInt("Enter the start channel number: ");
         int endCh = parser.readInt("Enter the end channel number: ");
         int value = parser.readInt("Enter a level within [0, 255]: ");
-        int time = parser.readInt("Enter a fade time: ");
+        double time = parser.readDouble("Enter a fade time: ");
         Playback playback = parser.readPlayback(
                 "Enter the playback number [1, 4]: ");
         client.setChannelRange(startCh, endCh, value, time, playback);

@@ -2,18 +2,17 @@ package com.interactive.cueserver.cli.actions;
 
 import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.cli.InputParser;
-import com.interactive.cueserver.data.playback.Playback;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Example for setting the level of a channel.
+ * Example for updating a cue.
  * <p>
  * author: Chris Reising
  */
-public class SetChannelAction implements Action
+public class UpdateCueAction implements Action
 {
-    /** Client to fire cue */
+    /** CueServer client */
     private final CueServerClient client;
 
     /** For reading input from the user. */
@@ -24,7 +23,7 @@ public class SetChannelAction implements Action
      *
      * @param client client to retrieve from.
      */
-    public SetChannelAction(CueServerClient client)
+    public UpdateCueAction(CueServerClient client)
     {
         this.client = checkNotNull(client, "client cannot be null.");
     }
@@ -35,7 +34,7 @@ public class SetChannelAction implements Action
     @Override
     public String getDescription()
     {
-        return "Set the level of a channel";
+        return "Update a cue";
     }
 
     /**
@@ -44,11 +43,7 @@ public class SetChannelAction implements Action
     @Override
     public void executeAction()
     {
-        int channel = parser.readInt("Enter a channel number: ");
-        int value = parser.readInt("Enter a level within [0, 255]: ");
-        double time = parser.readDouble("Enter a fade time: ");
-        Playback playback = parser.readPlayback(
-                "Enter the playback number [1, 4]: ");
-        client.setChannel(channel, value, time, playback);
+        double cueNumber =  parser.readDouble("Enter cue number: ");
+        client.updateCue(cueNumber);
     }
 }
