@@ -2,7 +2,6 @@ package com.interactive.cueserver.cli.actions;
 
 import com.interactive.cueserver.CueServerClient;
 import com.interactive.cueserver.cli.InputParser;
-import com.interactive.cueserver.data.playback.Playback;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

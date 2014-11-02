@@ -128,7 +128,7 @@ public interface CueServerClient
     void setChannelRange(int startChannel, int endChannel, int value);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provied
+     * Sets the range of channels to a level on playback 1 using the provided
      * time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
@@ -144,7 +144,7 @@ public interface CueServerClient
                          double timeSeconds);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provied
+     * Sets the range of channels to a level on playback 1 using the provided
      * time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
@@ -166,9 +166,9 @@ public interface CueServerClient
      * Records a cue.
      *
      * @param cueNumber the cue number to record. Must be positive. The
-     *                  CueServer only support up to one decimal place for cue
-     *                  number (e.g., 10.1). Any values greater than one decimal
-     *                  place will be truncated.
+     *                  CueServer only supports up to one decimal place for cue
+     *                  number (e.g., 10.1). The value passed in will be
+     *                  truncated to accommodate this.
      * @param uptimeSecs the fade's uptime in seconds. Must be within [0, 65000]
      * @param downtimeSecs the fade's downtime in seconds. Must be within
      *                     [0, 65000]. The precision is up to a tenth of a
@@ -180,9 +180,9 @@ public interface CueServerClient
     /**
      * Deletes a cue.
      *
-     * @param cueNumber the cue number to delete. The CueServer only support up
-     *                  to one decimal place for cue number (e.g., 10.1). Any
-     *                  values greater than one decimal place will be truncated
+     * @param cueNumber the cue number to delete. The CueServer only supports up
+     *                  to one decimal place for cue number (e.g., 10.1). The
+     *                  value passed in will be truncated to accommodate this.
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
      */
     void deleteCue(double cueNumber);
@@ -190,9 +190,9 @@ public interface CueServerClient
     /**
      * Updates a cue.
      *
-     * @param cueNumber the cue number to delete. The CueServer only support up
-     *                  to one decimal place for cue number (e.g., 10.1). Any
-     *                  values greater than one decimal place will be truncated
+     * @param cueNumber the cue number to delete. The CueServer only supports up
+     *                  to one decimal place for cue number (e.g., 10.1). The
+     *                  value passed in will be truncated to accommodate this.
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
      */
     void updateCue(double cueNumber);

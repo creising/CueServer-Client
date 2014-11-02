@@ -848,7 +848,7 @@ public class HttpCueServerClientTest
     }
 
     /**
-     * Test witn an end channel that is too low.
+     * Test with an end channel that is too low.
      */
     @Test(expected = IllegalArgumentException.class)
     public void setChannelRangeInvalidMinEndChan()
