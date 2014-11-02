@@ -23,4 +23,7 @@ The client library currently supports the following operations:
 - Retrieval of level from the DMX output
 - Play a cue on a playback
 - Clear a playback
+- Record a cue
+- Update a cue
+- Delete a cue
 
