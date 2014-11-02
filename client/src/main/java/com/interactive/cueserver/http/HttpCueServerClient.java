@@ -25,10 +25,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class HttpCueServerClient implements CueServerClient
 {
-    // TODO need to update script commands to use suggested abbreviations
-    // TODO setting a channel with a time does not appear to work after recording cues
-    // TODO need to confirm allowed upper bounds for time and cue number
-
     /** For logging. */
     private static final Logger LOGGER =
             LoggerFactory.getLogger(HttpCueServerClient.class);
@@ -91,8 +87,8 @@ public class HttpCueServerClient implements CueServerClient
      * or if the port is not valid.
      */
     public HttpCueServerClient(String host,
-                            int port,
-                            SimpleHttpClient httpClient)
+                                int port,
+                                SimpleHttpClient httpClient)
     {
         checkNotNull(host, "host cannot be null");
         checkArgument(port >= 0 && port <= 65535, "port is not valid");
@@ -295,8 +291,8 @@ public class HttpCueServerClient implements CueServerClient
         }
 
         String cmd =
-                "p+" + playback.getPlaybackId() + "+cue+" +
-                        truncateValue(cueNumber) + "+go";
+                "P+" + playback.getPlaybackId() + "+Q+" +
+                        truncateValue(cueNumber) + "+GO";
         LOGGER.debug("Cue command: {}", cmd);
 
         httpClient.submitHttpGetRequest(exeUrl + cmd);
@@ -308,7 +304,7 @@ public class HttpCueServerClient implements CueServerClient
     @Override
     public void clearPlayback(Playback playback)
     {
-        String cmd = "p+" + playback.getPlaybackId() + "+clear";
+        String cmd = "P+" + playback.getPlaybackId() + "+CL";
         LOGGER.debug("Cue command: {}", cmd);
 
         httpClient.submitHttpGetRequest(exeUrl + cmd);
@@ -344,9 +340,9 @@ public class HttpCueServerClient implements CueServerClient
         checkChannel(channel);
         checkChannelLevel(value);
         checkTime(timeSeconds);
-
-        String cmd = "p" + playback.getPlaybackId() + "+ch+" + channel +
-                "+at+%23" + value + "+time+" + truncateValue(timeSeconds);
+        //ex: T 3 P1 C 1 A 50
+        String cmd = "T+" + truncateValue(timeSeconds) + "+P" +
+                playback.getPlaybackId() + "+C+" + channel + "+A+%23" + value;
 
         String fullUrl = exeUrl + cmd;
         LOGGER.info("Channel command: {}", fullUrl);
@@ -391,9 +387,9 @@ public class HttpCueServerClient implements CueServerClient
         checkChannelLevel(value);
         checkTime(timeSeconds);
 
-        String cmd = "p" + playback.getPlaybackId() + "+ch+" + startChannel +
-                "%3E" + endChannel + "+at%23" + value + "+time+" +
-                truncateValue(timeSeconds);
+        String cmd = "T+" + truncateValue(timeSeconds) + "+P" +
+                playback.getPlaybackId() + "+C+" + startChannel +
+                "%3E" + endChannel + "+A%23" + value;
         LOGGER.debug("Range command: {}", cmd);
         httpClient.submitHttpGetRequest(exeUrl + cmd);
     }
@@ -402,7 +398,9 @@ public class HttpCueServerClient implements CueServerClient
      * {@inheritDoc}
      */
     @Override
-    public void recordCue(double cueNumber, double uptimeSecs, double downtimeSecs)
+    public void recordCue(double cueNumber,
+                          double uptimeSecs,
+                          double downtimeSecs)
     {
         checkCueNumber(cueNumber);
         checkTime(uptimeSecs);
