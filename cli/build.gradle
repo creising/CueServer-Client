@@ -1,5 +1,5 @@
 apply plugin: 'maven'
-apply plugin:'application'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -21,4 +21,4 @@ compileTestJava {
 }
 
 applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=info"]
-mainClassName = "com.interactive.cueserver.cli.CliRunner"
+mainClassName = "org.urbanbyte.cueserver.cli.CliRunner"
