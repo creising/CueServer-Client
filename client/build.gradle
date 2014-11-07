@@ -2,9 +2,14 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'com.bmuschko.nexus'
+
+group = "org.urbanbyte"
+version = "1.0"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 buildscript {
@@ -14,6 +19,7 @@ buildscript {
 
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:1.0.2'
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.1.1'
     }
 }
 
@@ -60,4 +66,58 @@ compileJava {
 
 compileTestJava {
     options.compilerArgs = ['-Xlint:all']
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'CueServer HTTP Client',
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Built-Gradle': gradle.gradleVersion
+    }
+}
+
+modifyPom {
+    project {
+        name 'CueServer HTTP client'
+        description 'Client library for the CueServer HTTP interface.'
+        url 'https://urbanbyte.org'
+        inceptionYear '2014'
+
+        scm {
+            url 'https://github.com/creising/CueServer-Client'
+            connection 'scm:https://github.com/creising/CueServer-Client.git'
+            developerConnection 'scm:https://github.com/creising/CueServer-Client.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'creising'
+                name 'Christopher Reising'
+                email 'creising@gmail.com'
+            }
+        }
+    }
+}
+
+extraArchive {
+    sources = false
+    tests = false
+    javadoc = true
+}
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
