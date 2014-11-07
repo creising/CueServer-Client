@@ -21,8 +21,11 @@ you're new to Gradle, here are a couple of common commands to get you started.
 All commands should be run from the root directory.
 
 `./gradlew build`: Compiles all code and runs the unit tests.
+
 `./gradle javadoc`: Generate Javadoc.
+
 `./gradlew clean`: Removes the build directories.
+
 `./gradlew cli:installApp`: Creates a JVM application along with libs and OS
 specific scripts. Once this command is run, the application can be found in:
 `cli/build/install/`.
@@ -36,7 +39,7 @@ The client library has the following dependencies:
 
 ### Additional Reading
 For further information regarding the CueServer, please visit:
-[Interactive Technologies](http://interactive-online.com)
+[Interactive Technologies](http://interactive-online.com).
 
 ### Supported Operations
 The client library currently supports the following operations:
