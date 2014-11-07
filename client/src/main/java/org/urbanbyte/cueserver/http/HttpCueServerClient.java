@@ -17,9 +17,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Communicates with a  CueServer over HTTP to request real-time information
- * about the show it is playing back, as well as send live data to CueServer
- * that it should output to the connected devices.
+ * The {@code CueServerClient} facilitates interaction with a CueServer. Clients
+ * have the ability to retrieve state related information, and send commands to
+ * a CueServer using it HTTP interface.
  * <p>
  * author: Chris Reising
  */
