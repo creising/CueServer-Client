@@ -9,6 +9,7 @@ env:
   - secure: XWT6dIx4cJToUZetkzULtYWbfLIbb5L+ALIdClHA2a1iedtO25LpkSTFNWHf1LdOUwEq6mt8JCMoDiHhWyMJtBSnsCmVL1FgS16K4zfu8u8m0qM4vejRiM7lmOrE1VQsoNEEgW1f3owd8KmbQZqN6qOpFghwS74V4sDf66XJWGY=
 after_success:
 
+echo "$TRAVIS_BRANCH"
 - if [[ "$TRAVIS_BRANCH" != "master" ]]; then
     ./gradlew uploadArchives -PnexusUsername="${OSSUNAME}" -PnexusPassword="${OSSPASS}"
   else
