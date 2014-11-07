@@ -11,6 +11,6 @@ after_success:
 
 - if [[ "$TRAVIS_BRANCH" != "master" ]]; then
     ./gradlew uploadArchives -PnexusUsername="${OSSUNAME}" -PnexusPassword="${OSSPASS}"
-fi
-
-- ./gradlew coveralls
+  else
+    ./gradlew coveralls
+  fi
