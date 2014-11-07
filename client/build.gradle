@@ -4,7 +4,7 @@ apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'com.bmuschko.nexus'
 
-group = "org.urbanbyte"
+group = "org.urbanbyte.cueserver"
 version = "1.0"
 
 repositories {
@@ -79,12 +79,14 @@ jar {
     }
 }
 
+
 modifyPom {
     project {
         name 'CueServer HTTP client'
         description 'Client library for the CueServer HTTP interface.'
         url 'https://urbanbyte.org'
         inceptionYear '2014'
+        artifactId = "cueserver-client"
 
         scm {
             url 'https://github.com/creising/CueServer-Client'
@@ -108,6 +110,7 @@ modifyPom {
             }
         }
     }
+
 }
 
 extraArchive {
