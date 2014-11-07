@@ -21,13 +21,15 @@ The client library uses the [Gradle](http://www.gradle.org) build system. If
 you're new to Gradle, here are a couple of common commands to get you started.
 All commands should be run from the root directory.
 
-`./gradlew build`: compiles all code and runs the unit tests
-`./gradlew clean`: removes the build directories
-`./gradlew cli:installApp`: creates a JVM application along with libs and OS
+`./gradlew build`: Compiles all code and runs the unit tests.
+`./gradle javadoc`: Generate Javadoc.
+`./gradlew clean`: Removes the build directories.
+`./gradlew cli:installApp`: Creates a JVM application along with libs and OS
 specific scripts. Once this command is run, the application can be found in:
-`cli/build/install/`
+`cli/build/install/`.
 
 ####Dependencies
+
 The client library has the following dependencies:
 
 * Google's guava v18.0
