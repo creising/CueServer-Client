@@ -84,7 +84,7 @@ modifyPom {
     project {
         name 'CueServer HTTP client'
         description 'Client library for the CueServer HTTP interface.'
-        url 'https://urbanbyte.org'
+        url 'http://urbanbyte.org'
         inceptionYear '2014'
         artifactId = "cueserver-client"
 
