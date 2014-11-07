@@ -12,7 +12,6 @@ noted in CueServer's documentation, new requests should only be sent after a
 response from the previous request has been received from CueServer.
 
 ###Project Structure
-
 `./client` contains all code related to the client library.
 `./cli` contains all of the code related to the example command line interface.
 
@@ -29,7 +28,6 @@ specific scripts. Once this command is run, the application can be found in:
 `cli/build/install/`.
 
 ####Dependencies
-
 The client library has the following dependencies:
 
 * Google's guava v18.0
