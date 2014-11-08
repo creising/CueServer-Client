@@ -6,7 +6,9 @@ import org.urbanbyte.cueserver.data.playback.PlaybackStatus;
 import org.urbanbyte.cueserver.data.system.SystemInfo;
 
 /**
- * Allows client to both retrieve and send commands to a CueServer.
+ * The {@code CueServerClient} facilitates interaction with a CueServer. Clients
+ * have the ability to retrieve state related information, and send commands to
+ * a CueServer.
  * <p>
  * author: Chris Reising
  */
@@ -51,8 +53,8 @@ public interface CueServerClient
     /**
      * Executes the given cue number on {@link Playback#PLAYBACK_1}.
      *
-     * @param cueNumber The cue number to execute. The CueServer only support up
-     *                  to one decimal place for cue number (e.g., 10.1). Any
+     * @param cueNumber The cue number to execute. The CueServer only supports
+     *                  up to one decimal place for cue number (e.g., 10.1). Any
      *                  values greater than one decimal place will be truncated
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
      */
@@ -61,8 +63,8 @@ public interface CueServerClient
     /**
      * Executes the given cue number on the given playback.
      *
-     * @param cueNumber The cue number to execute. The CueServer only support up
-     *                  to one decimal place for cue number (e.g., 10.1). Any
+     * @param cueNumber The cue number to execute. The CueServer only supports
+     *                  up to one decimal place for cue number (e.g., 10.1). Any
      *                  values greater than one decimal place will be truncated
      * @param playback the playback to execute the cue on.
      * @throws IllegalArgumentException if {@code cueNumber} is not positive.
@@ -71,7 +73,7 @@ public interface CueServerClient
     void playCue(double cueNumber, Playback playback);
 
     /**
-     * Clear the given playback.
+     * Clears the given playback.
      *
      * @param playback the playback to clear.
      * @throws NullPointerException if {@code playback} is {@code null}.
@@ -79,19 +81,21 @@ public interface CueServerClient
     void clearPlayback(Playback playback);
 
     /**
-     * Sets the given channel to a level on playback 1 using a time of 0.
+     * Sets the given channel to a level on {@link Playback#PLAYBACK_1} using a
+     * time of 0.
      *
      * @param channel The channel to set. Must be within [1, 512].
-     * @param value The value. Must be within [0, 255].
-     * @throws IllegalArgumentException if any parameters is out of bounds.
+     * @param value The value of the channel level. Must be within [0, 255].
+     * @throws IllegalArgumentException if any argument is out of bounds.
      */
     void setChannel(int channel, int value);
 
     /**
-     * Sets the given channel to a level on playback 1 using the provided time.
+     * Sets the given channel to a level on {@link Playback#PLAYBACK_1} using
+     * the provided time.
      *
      * @param channel The channel to set. Must be within [1, 512].
-     * @param value The value. Must be within [0, 255].
+     * @param value The value of the channel level. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
      *                    transition. Must be within [0, 65000]. The precision
      *                    is up to a tenth of a second.
@@ -104,7 +108,7 @@ public interface CueServerClient
      * provided time.
      *
      * @param channel The channel to set. Must be within [1, 512].
-     * @param value The value. Must be within [0, 255].
+     * @param value The value of the channel level. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
      *                    transition. Must be within [0, 65000]. The precision
      *                    is up to a tenth of a second.
@@ -116,11 +120,12 @@ public interface CueServerClient
                     Playback playback);
 
     /**
-     * Sets the range of channels to a level on playback 1 using a time of 0.
+     * Sets the range of channels to a level on {@link Playback#PLAYBACK_1}
+     * using a time of 0.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
      * @param endChannel The end of the range. Must be within [1, 512].
-     * @param value The value to set the channel to. Must be within [0, 255].
+     * @param value The value of the channel level. Must be within [0, 255].
      * @throws IllegalArgumentException if the end if greater than the start
      *                                  range, or if any value is outside of its
      *                                  bounds.
@@ -128,12 +133,12 @@ public interface CueServerClient
     void setChannelRange(int startChannel, int endChannel, int value);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provided
-     * time.
+     * Sets the range of channels to a level on {@link Playback#PLAYBACK_1}
+     * using the provided time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
      * @param endChannel The end of the range. Must be within [1, 512].
-     * @param value The value to set the channel to. Must be within [0, 255].
+     * @param value The value of the channel level. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
      *                    transition. Must be within [0, 65000].
      * @throws IllegalArgumentException if the end if greater than the start
@@ -144,17 +149,17 @@ public interface CueServerClient
                          double timeSeconds);
 
     /**
-     * Sets the range of channels to a level on playback 1 using the provided
-     * time.
+     * Sets the range of channels to a level on {@link Playback#PLAYBACK_1}
+     * using the provided time.
      *
      * @param startChannel The beginning of the range. Must be within [1, 512].
      * @param endChannel The end of the range. Must be within [1, 512].
-     * @param value The value to set the channel to. Must be within [0, 255].
+     * @param value The value of the channel level. Must be within [0, 255].
      * @param timeSeconds The time in seconds for the channel to complete its
      *                    transition. Must be within [0, 65000]. The precision
      *                    is up to a tenth of a second.
      *@param playback the playback controlling the channel.
-     * @throws IllegalArgumentException if the end if greater than the start
+     * @throws IllegalArgumentException if the end is greater than the start
      *                                  range, or if any value is outside of its
      *                                  bounds.
      * @throws NullPointerException if {@code playback} is {@code null}
@@ -169,7 +174,9 @@ public interface CueServerClient
      *                  CueServer only supports up to one decimal place for cue
      *                  number (e.g., 10.1). The value passed in will be
      *                  truncated to accommodate this.
-     * @param uptimeSecs the fade's uptime in seconds. Must be within [0, 65000]
+     * @param uptimeSecs the fade's uptime in seconds. Must be within
+     *                   [0, 65000]. The precision is up to a tenth of a
+     *                     second.
      * @param downtimeSecs the fade's downtime in seconds. Must be within
      *                     [0, 65000]. The precision is up to a tenth of a
      *                     second.

@@ -11,9 +11,35 @@ Currently, the client library does not throttle requests to the CueServer. As
 noted in CueServer's documentation, new requests should only be sent after a
 response from the previous request has been received from CueServer.
 
-### Details
-For further information regarding the cue server, please visit:
-[Interactive Technologies](http://interactive-online.com)
+###Project Structure
+`./client` contains all code related to the client library.
+`./cli` contains all of the code related to the example command line interface.
+
+###Compilation
+The client library uses the [Gradle](http://www.gradle.org) build system. If
+you're new to Gradle, here are a couple of common commands to get you started.
+All commands should be run from the root directory.
+
+`./gradlew build`: Compiles all code and runs the unit tests.
+
+`./gradle javadoc`: Generate Javadoc.
+
+`./gradlew clean`: Removes the build directories.
+
+`./gradlew cli:installApp`: Creates a JVM application along with libs and OS
+specific scripts. Once this command is run, the application can be found in:
+`cli/build/install/`.
+
+####Dependencies
+The client library has the following dependencies:
+
+* Google's guava v18.0
+* Apache's httpclient v4.3.5
+* Your favorite SLF4J library for logging
+
+### Additional Reading
+For further information regarding the CueServer, please visit:
+[Interactive Technologies](http://interactive-online.com).
 
 ### Supported Operations
 The client library currently supports the following operations:

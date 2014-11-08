@@ -54,7 +54,7 @@ public class Cue
     /**
      * Gets the name of the cue.
      *
-     * @return Cna be {@code null}.
+     * @return Can be {@code null}.
      */
     public String getName()
     {

@@ -5,7 +5,7 @@ import org.urbanbyte.cueserver.data.cue.Cue;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Contains common information for a CueServer's playback.
+ * Contains the state information for a CueServer's playback.
  *  <p>
  * author: Chris Reising
  */

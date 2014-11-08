@@ -1,10 +1,17 @@
 language: java
-
 jdk:
 - oraclejdk7
-
 env:
-- TERM=dumb
-
+  matrix:
+  - TERM=dumb
+  global:
+  - secure: ZmCjQ4x9bFxBdd7JPzGrPKDa5F7cpg0YuT6ojIg0WsoC8ZeUXMuTUDrg9s2Aqi5VlEY0+y/FPf14cY8KB8YGUQ1DrMrNEpT3g69mF0KiyVb9uhSjdWYq9OoGIHL8uvP1C/foszmUTYVEKron2fr6fjX/cvsYuj4TdSpi2nd9gEI=
+  - secure: XWT6dIx4cJToUZetkzULtYWbfLIbb5L+ALIdClHA2a1iedtO25LpkSTFNWHf1LdOUwEq6mt8JCMoDiHhWyMJtBSnsCmVL1FgS16K4zfu8u8m0qM4vejRiM7lmOrE1VQsoNEEgW1f3owd8KmbQZqN6qOpFghwS74V4sDf66XJWGY=
 after_success:
-- ./gradlew jacocoTestReport coveralls
+
+  - echo "$TRAVIS_BRANCH"
+  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then
+      ./gradlew uploadArchives -PnexusUsername="${OSSUNAME}" -PnexusPassword="${OSSPASS}";
+    else
+      ./gradlew coveralls;
+    fi
