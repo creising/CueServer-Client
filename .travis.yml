@@ -10,7 +10,7 @@ env:
 after_success:
 
   - echo "$TRAVIS_BRANCH"
-  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then
+  - if [[ "$TRAVIS_BRANCH" == "dev" ]]; then
       ./gradlew uploadArchives -PnexusUsername="${OSSUNAME}" -PnexusPassword="${OSSPASS}";
     else
       ./gradlew coveralls;
