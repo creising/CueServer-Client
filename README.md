@@ -31,7 +31,7 @@ specific scripts. Once this command is run, the application can be found in:
 `cli/build/install/`.
 
 ####Artifacts
-Artifacts can be found on [The Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.urbanbyte.cueserver%22%20AND%20a%3A%22cueserver-client%22)
+Artifacts can be found on [The Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.urbanbyte.cueserver%22%20AND%20a%3A%22cueserver-client%22).
 
 ####Dependencies
 The client library has the following dependencies:
