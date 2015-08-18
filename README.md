@@ -58,3 +58,5 @@ The client library currently supports the following operations:
 - Update a cue
 - Delete a cue
 
+Questions? Feel free to contact me at creising@gmail.com
+
