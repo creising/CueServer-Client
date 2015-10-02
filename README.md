@@ -11,6 +11,9 @@ Currently, the client library does not throttle requests to the CueServer. As
 noted in CueServer's documentation, new requests should only be sent after a
 response from the previous request has been received from CueServer.
 
+###Documentation
+All Javadoc can be found [here](http://creising.github.io/cueserverdoc/).
+
 ###Project Structure
 `./client` contains all code related to the client library.
 `./cli` contains all of the code related to the example command line interface.
