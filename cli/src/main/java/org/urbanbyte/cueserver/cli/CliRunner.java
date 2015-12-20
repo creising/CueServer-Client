@@ -91,18 +91,20 @@ public class CliRunner
     public static void main(String[] args)
     {
         String url;
+        int port;
         if(args.length == 0)
         {
-            System.out.println("Using http://cueserver.dnsalias.com for the " +
+            System.out.println("Using http://demo1.cueserver.com for the " +
                     "URL.");
-            url = "http://cueserver.dnsalias.com";
+            url = "http://demo1.cueserver.com";
+            port = 100;
         }
         else
         {
             url = args[0];
+            port = Integer.parseInt(args[1]);
         }
-
-        CueServerClient client = new HttpCueServerClient(url);
+        CueServerClient client = new HttpCueServerClient(url, port);
 
         List<Action> csActions = new ArrayList<Action>();
         csActions.add(new SystemInfoAction(client));
