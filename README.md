@@ -11,6 +11,9 @@ Currently, the client library does not throttle requests to the CueServer. As
 noted in CueServer's documentation, new requests should only be sent after a
 response from the previous request has been received from CueServer.
 
+###Documentation
+All Javadoc can be found [here](http://creising.github.io/cueserverdoc/).
+
 ###Project Structure
 `./client` contains all code related to the client library.
 `./cli` contains all of the code related to the example command line interface.
@@ -31,7 +34,7 @@ specific scripts. Once this command is run, the application can be found in:
 `cli/build/install/`.
 
 ####Artifacts
-Artifacts can be found on [The Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.urbanbyte.cueserver%22%20AND%20a%3A%22cueserver-client%22)
+Artifacts can be found on [The Central Repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.urbanbyte.cueserver%22%20AND%20a%3A%22cueserver-client%22).
 
 ####Dependencies
 The client library has the following dependencies:
@@ -57,4 +60,6 @@ The client library currently supports the following operations:
 - Record a cue
 - Update a cue
 - Delete a cue
+
+Questions? Feel free to contact me at creising@gmail.com
 
